@@ -1,0 +1,1094 @@
+<title>Demand That Can't Vote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#edf0f3; --panel:#ffffff; --ink:#0d1b2a; --ink2:#3d4c5e; --muted:#687789; --line:#dce2e8; --line2:#c3ccd6;
+  --accent:#0d6b67; --accentSoft:#e0efed; --warn:#a85a07; --warnSoft:#fbeedc; --hexStroke:#ffffff; --geoLine:#0d1b2a;
+  --seq0:#eef2f1; --seq1:#0d4f5c; --focus:#0d6b67; --bar:#0f2436; --barInk:#e9eff4; --barMuted:#9fb2c4; --barLine:#23394d;
+  --f-display:"Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --f-body:"Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a131c; --panel:#101c28; --ink:#e5ebf1; --ink2:#a8b5c3; --muted:#7c8a99; --line:#1d2b39; --line2:#2b3b4c;
+    --accent:#4cc3b9; --accentSoft:#0f3431; --warn:#f0a95c; --warnSoft:#3a2a18; --hexStroke:#101c28; --geoLine:#e5ebf1;
+    --seq0:#172633; --seq1:#6fd4ca; --focus:#4cc3b9; --bar:#060e15; --barInk:#e5ebf1; --barMuted:#8ea2b5; --barLine:#1a2a3a; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a131c; --panel:#101c28; --ink:#e5ebf1; --ink2:#a8b5c3; --muted:#7c8a99; --line:#1d2b39; --line2:#2b3b4c;
+    --accent:#4cc3b9; --accentSoft:#0f3431; --warn:#f0a95c; --warnSoft:#3a2a18; --hexStroke:#101c28; --geoLine:#e5ebf1;
+    --seq0:#172633; --seq1:#6fd4ca; --focus:#4cc3b9; --bar:#060e15; --barInk:#e5ebf1; --barMuted:#8ea2b5; --barLine:#1a2a3a; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5;padding-inline:0;padding-block:0 48px;font-feature-settings:"tnum" 0}
+.wrapo{padding-inline:16px}
+.wrap{max-width:1272px;margin:0 auto;padding-inline:16px;display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+.proto{white-space:normal}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:-.015em}
+h1{font-size:clamp(26px,4vw,38px);font-weight:700;line-height:1.08}
+h2{font-size:18px;font-weight:700}
+h3{font-size:15px;font-weight:700}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{color:var(--ink2);max-width:68ch;margin:8px 0 0}
+.proto{display:inline-flex;gap:6px;align-items:center;font-family:var(--f-mono);font-size:11px;letter-spacing:.04em;background:var(--warnSoft);color:var(--warn);padding:3px 8px;border-radius:4px;margin-top:10px}
+header{display:grid;gap:4px}
+.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px}
+.layers{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.layers button,.seg button{font:500 12.5px var(--f-body);border:1px solid var(--line2);background:transparent;color:var(--ink2);padding:5px 10px;border-radius:3px;cursor:pointer}
+.seg{display:flex;gap:0}.seg button{border-radius:0}.seg button:first-child{border-radius:3px 0 0 3px}.seg button:last-child{border-radius:0 3px 3px 0;margin-left:-1px}
+.seg button[aria-pressed="true"],.layers button[aria-pressed="true"]{background:var(--accent);color:var(--panel);border-color:var(--accent)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.mapbox{position:relative;overflow-x:auto}
+svg.map{display:block;width:100%;height:auto;min-width:320px}
+svg.map .seat{cursor:pointer;stroke:var(--hexStroke);stroke-width:.8;stroke-linejoin:round;transition:opacity .15s}
+svg.map .seat:hover{stroke:var(--ink);stroke-width:1.6}
+svg.map .seat.est{stroke-dasharray:3 2;stroke:var(--muted)}
+svg.map .seat.dim{opacity:.16}
+svg.map .boro{fill:none;stroke:var(--geoLine);stroke-width:1.1;opacity:.55;pointer-events:none;stroke-linejoin:round}
+svg.map .selo{fill:none;stroke:var(--ink);stroke-width:3;pointer-events:none;stroke-linejoin:round}
+svg.map .selo2{fill:none;stroke:var(--panel);stroke-width:6;pointer-events:none;stroke-linejoin:round}
+svg.map .hex{cursor:pointer;stroke:var(--hexStroke);stroke-width:2}
+svg.map .hex.sel{stroke:var(--ink);stroke-width:3}
+svg.map .hex.est{stroke-dasharray:3 2;stroke:var(--muted)}
+svg.map g text{font:500 6.5px var(--f-mono)!important;stroke:none!important;fill:#1a1d22}
+svg.map g text.lt{fill:#ffffff}
+svg.map text{font:600 13px var(--f-body);pointer-events:none;fill:var(--ink);paint-order:stroke;stroke:var(--panel);stroke-width:4px;stroke-linejoin:round}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:6px 8px;border-radius:6px;max-width:240px;line-height:1.35;z-index:2}
+.legendrow{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;margin-top:12px}
+.bivar{display:grid;grid-template-columns:auto auto;gap:6px;align-items:end}
+.bivar .cells{display:grid;grid-template-columns:repeat(3,22px);grid-template-rows:repeat(3,22px);gap:2px}
+.bivar .cells div{border-radius:3px}
+.axl{font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
+.types{display:grid;gap:4px;font-size:12.5px;color:var(--ink2)}
+.types span.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.seqleg{display:grid;gap:4px;min-width:200px}
+.seqbar{height:10px;border-radius:3px}
+.seqlab{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
+.note{font-size:12px;color:var(--muted)}
+form.pc{display:flex;gap:8px;margin-top:8px}
+form.pc input{flex:1;min-width:0;font:500 15px var(--f-mono);padding:9px 11px;border:1px solid var(--line2);border-radius:8px;background:var(--bg);color:var(--ink);text-transform:uppercase}
+form.pc button{font:600 14px var(--f-body);padding:9px 14px;border-radius:8px;border:0;background:var(--accent);color:var(--panel);cursor:pointer}
+.pcmsg{font-size:12.5px;color:var(--ink2);min-height:1.5em;margin-top:6px}
+.card{display:grid;gap:14px;margin-top:10px}
+.card .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 11.5px var(--f-body);padding:3px 9px;border-radius:999px;white-space:nowrap;color:#15181d}
+.mp{font-size:13px;color:var(--ink2)}
+.mp b{color:var(--ink);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stat{border-top:1px solid var(--line);padding-top:8px}
+.stat .k{font-size:11.5px;color:var(--muted)}
+.stat .v{font:500 20px var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.stat .s{font-size:11.5px;color:var(--ink2)}
+.ask{background:var(--accentSoft);border-radius:8px;padding:12px}
+.ask .eyebrow{color:var(--accent)}
+.ask p{margin:4px 0 0}
+.flag{font-size:11.5px;color:var(--warn)}
+.bars{display:grid;gap:4px}
+.bar{height:8px;border-radius:4px;background:var(--line);position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;border-radius:4px}
+.controls{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end;margin:10px 0 12px}
+.ctl{display:grid;gap:4px;font-size:12px;color:var(--ink2)}
+.ctl select{font:500 13px var(--f-body);padding:6px 8px;border-radius:6px;border:1px solid var(--line2);background:var(--bg);color:var(--ink)}
+.ctl input[type=range]{width:180px;accent-color:var(--accent)}
+.ctl output{font-family:var(--f-mono);color:var(--ink)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:13px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font:500 11px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--panel);position:sticky;top:0}
+td.num,th.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--accentSoft)}
+tbody tr.sel{background:var(--accentSoft)}
+td .why{display:block;font-size:11.5px;color:var(--muted)}
+.pbar{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.pbar .bar{width:70px}
+.game{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.game .cell{border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:6px;align-content:start}
+.game .cell p{margin:0;color:var(--ink2);font-size:13px}
+.game .cell .who{font-size:12px;color:var(--muted)}
+.vt{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.vt{grid-template-columns:1fr}}
+svg.sc{display:block;width:100%;height:auto;min-width:320px}
+svg.sc text{font:400 11px var(--f-mono);fill:var(--muted)}
+svg.sc .gl{stroke:var(--line);stroke-width:1}
+svg.sc .ax{stroke:var(--line2);stroke-width:1}
+svg.sc circle{stroke:var(--panel);stroke-width:2;cursor:pointer}
+svg.sc circle.sel{stroke:var(--ink);stroke-width:2.5}
+.findings{display:grid;gap:12px}
+.fnd{border-top:1px solid var(--line);padding-top:10px}
+.fnd .n{font:500 22px var(--f-mono);letter-spacing:-.02em}
+.fnd p{margin:2px 0 0;color:var(--ink2);font-size:13px}
+[hidden]{display:none!important}
+.lab{display:grid;gap:14px}
+.labhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.hyps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.hyp{border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:6px;align-content:start}
+.hyp h3{font-size:14.5px}
+.hyp .conf{font:500 10.5px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;justify-self:start}
+.conf.strong{background:var(--accent);color:var(--panel)} .conf.moderate{background:var(--accentSoft);color:var(--accent)} .conf.tentative{background:var(--warnSoft);color:var(--warn)}
+.hyp p{margin:0;font-size:13px;color:var(--ink2)}
+.hyp .ev{font-family:var(--f-mono);font-size:11.5px;color:var(--ink2)}
+.hyp .lv{font-size:12px;color:var(--muted)}
+.kref{font:500 11px var(--f-mono);color:var(--accent);text-decoration:none;border-bottom:1px dotted var(--accent)}
+.memobar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.memobar button,.ask button{font:600 13px var(--f-body);padding:8px 13px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:var(--ink);cursor:pointer}
+.memobar button.primary{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.memobar button:disabled{opacity:.5;cursor:default}
+.memo{border-top:1px solid var(--line);padding-top:14px;max-width:78ch;line-height:1.6}
+.memo h1,.memo h2,.memo h3{margin:18px 0 6px}
+.memo h1{font-size:22px}.memo h2{font-size:17px}.memo h3{font-size:14.5px}
+.memo p{margin:6px 0}.memo ul{margin:6px 0;padding-left:20px}.memo li{margin:3px 0}
+.memo .thinking{color:var(--muted);font-style:italic}
+.ask{display:grid;gap:6px;max-width:78ch}
+.ask input{flex:1;min-width:0;font:400 14px var(--f-body);padding:8px 10px;border:1px solid var(--line2);border-radius:8px;background:var(--bg);color:var(--ink)}
+.answer{line-height:1.6;color:var(--ink)}
+.evid ol{margin:8px 0 0;padding-left:20px;display:grid;gap:8px;font-size:12.5px;color:var(--ink2)}
+.evid li b{color:var(--ink)}
+.evid a{color:var(--accent)}
+.bkstatus{display:inline-flex;align-items:center;gap:6px;font:500 11px var(--f-mono);letter-spacing:.03em;padding:3px 8px;border-radius:4px;margin:10px 0 0 8px;background:var(--accentSoft);color:var(--accent)}
+.bkstatus::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.bkstatus[data-mode="error"],.bkstatus[data-mode="empty"]{background:var(--warnSoft);color:var(--warn)}
+.bkstatus[data-mode="snapshot"]{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.admin{display:grid;gap:14px}
+.adminstats{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:700px){.adminstats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.admrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.admbox{border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:8px;align-content:start}
+.admbox p{margin:0}.admbox code{font-family:var(--f-mono);font-size:11.5px;background:var(--bg);padding:1px 4px;border-radius:3px;word-break:break-all}
+.admbox button,.filebtn{font:600 13px var(--f-body);padding:8px 13px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:var(--ink);cursor:pointer;justify-self:start}
+.admbox button.primary{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+#impfile{position:absolute;left:-9999px}
+.confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;background:var(--warnSoft);color:var(--warn);padding:8px;border-radius:8px}
+.jump{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:13px}
+.jump a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accentSoft)}
+.appbar{background:var(--bar);color:var(--barInk);padding-inline:16px;border-bottom:1px solid var(--barLine)}
+.appbar .in{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px 20px;flex-wrap:wrap;padding-block:14px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .mk{width:30px;height:30px;flex:none}
+.brand b{display:block;font:800 17px var(--f-body);letter-spacing:-.01em}
+.brand span{display:block;font:500 12px var(--f-body);color:var(--barMuted)}
+.appbar .bkstatus{margin:0;background:transparent!important;border:1px solid var(--barLine)!important;color:var(--barMuted)!important}
+.appbar .bkstatus[data-mode="live"]{color:#6fd4ca!important}
+.tabs{max-width:1240px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs a{font:600 13px var(--f-body);color:var(--barMuted);text-decoration:none;padding:9px 12px 11px;border-bottom:2px solid transparent;white-space:nowrap}
+.tabs a:hover{color:var(--barInk);border-bottom-color:var(--barMuted)}
+.tabs a.on{color:var(--barInk);border-bottom-color:#4cc3b9}
+.pagehead{display:flex;justify-content:space-between;align-items:flex-end;gap:10px 24px;flex-wrap:wrap;padding-top:22px}
+.pagehead h1{font-size:clamp(22px,3vw,30px);font-weight:800;line-height:1.12;max-width:30ch}
+.pagehead p{margin:6px 0 0;color:var(--ink2);max-width:70ch}
+.wf{padding:0;overflow:hidden}
+.wfhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px 16px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line)}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));counter-reset:st}
+@media (max-width:980px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.steps{grid-template-columns:minmax(0,1fr)}}
+.step{padding:14px 18px 16px;display:grid;gap:8px;align-content:start;counter-increment:st;border-right:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 -1px -1px 0}
+.step .lbl{display:flex;gap:8px;align-items:center;font:600 11px var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.step .lbl::before{content:counter(st);font:600 11px var(--f-mono);color:var(--panel);background:var(--ink2);border-radius:2px;width:18px;height:18px;display:inline-grid;place-items:center;flex:none;letter-spacing:0}
+.step.done .lbl::before{background:var(--accent)}
+.step h3{font-size:15px;font-weight:700}
+.step .now{font-size:12.5px;color:var(--ink2);line-height:1.45}
+.step .now b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.step button.go{font:600 13px var(--f-body);padding:8px 12px;border-radius:3px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);cursor:pointer;justify-self:start}
+.step button.go.sec{background:transparent;color:var(--accent)}
+.step button.go:disabled{opacity:.45;cursor:not-allowed}
+.step form{display:flex;gap:6px}
+.step input,.step select{font:500 13.5px var(--f-body);padding:7px 9px;border-radius:3px;border:1px solid var(--line2);background:var(--panel);color:var(--ink);min-width:0;flex:1;width:100%}
+.step input{font-family:var(--f-mono);text-transform:uppercase}
+.step .row{display:flex;gap:6px;flex-wrap:wrap}
+button.lk{font:600 12.5px var(--f-body);background:none;border:0;padding:0;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.catleg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2)}
+.catleg span{display:inline-flex;align-items:center;gap:6px}
+.catleg i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.seatlinks{display:flex;flex-wrap:wrap;gap:6px}
+.seatlinks button{font:500 12px var(--f-body);border:1px solid var(--line2);background:var(--bg);color:var(--ink);border-radius:999px;padding:3px 9px;cursor:pointer}
+.seatlinks button:hover{border-color:var(--accent)}
+.verdict{font-size:14.5px;line-height:1.55;margin:0;color:var(--ink)}
+.helps{display:grid;gap:8px}
+.help{border-left:3px solid var(--accent);padding:2px 0 2px 10px}
+.help b{display:block;font-size:13.5px}
+.help span{font-size:12.5px;color:var(--ink2)}
+.hyp .fix{font-size:13px;color:var(--ink)}
+.hyp .whoa{font-size:12px;color:var(--ink2)}
+td.num{white-space:nowrap}
+td.blk{font-size:12.5px;color:var(--ink2);max-width:220px}
+.adjust{margin:0 0 12px;border-top:none;padding-top:0}
+.adjust summary{font:500 13px var(--f-body);color:var(--accent)}
+.fnd .cmp{font:500 15px var(--f-mono);letter-spacing:-.01em}
+.fnd .so{font-size:13px;color:var(--ink);margin-top:4px}
+.fnd .rho{font-size:11px;color:var(--muted);font-family:var(--f-mono)}
+.memocard{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--bg)}
+.mc-icon{flex:none;width:44px;height:56px;border-radius:4px;background:var(--accent);color:var(--panel);font:600 11px var(--f-mono);display:grid;place-items:center;letter-spacing:.05em}
+.mc-body{display:grid;gap:6px;min-width:0}
+.mc-bl{margin:0;font-size:14px;line-height:1.5;color:var(--ink)}
+.mc-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.btn{font:600 13px var(--f-body);padding:7px 12px;border-radius:8px;border:1px solid var(--line2);background:var(--panel);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.memoprog{display:flex;gap:10px;align-items:center;font-size:13.5px;color:var(--ink2);padding:12px;border:1px dashed var(--line2);border-radius:10px}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--accent)}
+@media (prefers-reduced-motion:no-preference){.spin{animation:sp 0.9s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}}
+.recent ul{margin:6px 0 0;padding-left:18px;display:grid;gap:4px;font-size:13px}
+.recent a{color:var(--accent)}
+.linkbtn{font:500 12px var(--f-body);background:none;border:0;color:var(--accent);cursor:pointer;padding:0 0 0 4px;text-decoration:underline}
+details{border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:15px}
+.method{display:grid;gap:8px;color:var(--ink2);max-width:80ch;margin-top:10px}
+.method p{margin:0}
+.method code{font-family:var(--f-mono);font-size:12px;background:var(--bg);padding:1px 4px;border-radius:3px}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .25s ease}}
+</style>
+
+<div class="appbar">
+  <div class="in">
+    <div class="brand"><svg class="mk" viewBox="0 0 30 30" aria-hidden="true"><g fill="#4cc3b9"><rect x="2" y="2" width="8" height="8"/><rect x="11" y="2" width="8" height="8"/><rect x="20" y="2" width="8" height="8"/><rect x="2" y="11" width="8" height="8"/><rect x="20" y="11" width="8" height="8"/><rect x="2" y="20" width="8" height="8"/><rect x="11" y="20" width="8" height="8"/><rect x="20" y="20" width="8" height="8"/></g><rect x="11.5" y="11.5" width="7" height="7" fill="none" stroke="#e9eff4" stroke-width="1" stroke-dasharray="2 1.5"/></svg>
+      <div><b>The Demand That Can't Vote</b><span>London housing supply and representation tool</span></div></div>
+    <span class="bkstatus" id="bkstatus" data-mode="snapshot">Snapshot data</span>
+  </div>
+  <nav class="tabs" aria-label="Sections"><a href="#start">Brief</a><a href="#area">Map</a><a href="#lab">Diagnosis</a><a href="#rankh">Rankings</a><a href="#voiceh">Evidence</a><a href="#gameh">Area types</a><a href="#method">Method</a></nav>
+</div>
+<div class="wrap">
+  <div class="pagehead">
+    <div><div class="eyebrow">London · 75 Westminster seats · 2019/20–2024/25 delivery</div>
+    <h1>Where London is short of homes, what is blocking them, and who can act</h1>
+    <p>Missing homes per seat against a London target, the local blocker behind each shortfall, and the MP, council and Mayoral levers that can move it.</p></div>
+    <span class="proto">Resident views for 24 seats are modelled estimates</span>
+  </div>
+
+  <section class="panel wf" id="start" aria-labelledby="starth">
+    <div class="wfhead"><h2 id="starth">Build a seat brief</h2><span class="note">Work left to right. Every control below updates the map, the diagnosis and the rankings.</span></div>
+    <ol class="steps" id="steps"></ol>
+  </section>
+
+  <div class="grid" id="area">
+    <section class="panel" aria-labelledby="maph">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <h2 id="maph">London map</h2>
+        <div class="seg" role="group" aria-label="Map style"><button type="button" data-v="geo" aria-pressed="true">Boundaries</button><button type="button" data-v="hex" aria-pressed="false">Equal-size hexes</button></div>
+      </div>
+      <div class="layers" role="group" aria-label="Map layer" id="layers"></div>
+      <div class="mapbox" id="mapbox"><svg class="map" id="map" role="img" aria-label="Map of London parliamentary constituencies"></svg><div class="tip" id="tip" hidden></div></div>
+      <div class="legendrow" id="legend"></div>
+      <p class="note" style="margin:10px 0 0">Dashed outline: resident concern estimated (no Forest reading pulled yet for this seat).</p>
+    </section>
+
+    <section class="panel" aria-labelledby="pch">
+      <h2 id="pch">Your area</h2><p class="note" style="margin:2px 0 0">Enter a postcode, or select a seat on the map or in the rankings.</p>
+      <form class="pc" id="pcform" autocomplete="off">
+        <label for="pcin" class="eyebrow" style="position:absolute;left:-9999px">Postcode</label>
+        <input id="pcin" name="pc" placeholder="Postcode, e.g. SE15 5DQ" value="SE15 5DQ" inputmode="text">
+        <button type="submit">Look up</button>
+      </form>
+      <div class="pcmsg" id="pcmsg"></div>
+      <div class="card" id="card"></div>
+    </section>
+  </div>
+
+  <section class="panel lab" aria-labelledby="labh" id="lab">
+    <div class="labhead">
+      <div><div class="eyebrow">Diagnosis</div><h2 id="labh">Why homes aren't being built in <span id="labseat">this seat</span>, and what would help</h2></div>
+      <span class="note">Each finding shows how strong the evidence is, the numbers behind it, what would fix it and who can act.</span>
+    </div>
+    <div class="hyps" id="hyps"></div>
+    <div class="memobar">
+      <button type="button" class="primary" id="memobtn">Write a policy memo</button>
+      <button type="button" id="stopbtn" hidden>Stop</button>
+      <span class="note" id="memostatus">Writes a 2–3 page PDF from this seat's data, similar seats and the policy library, and saves it here for your team. Runs on your Claude account.</span>
+    </div>
+    <div class="memo" id="memo" hidden></div>
+    <div class="recent" id="recentmemos" hidden></div>
+    <form class="ask" id="askform" hidden autocomplete="off">
+      <label for="askin" class="note">Ask a follow-up about this seat</label>
+      <div style="display:flex;gap:8px"><input id="askin" placeholder="e.g. What would the draft London Plan change here?"><button type="submit">Ask</button></div>
+      <div class="answer" id="answer"></div>
+    </form>
+    <details class="evid" id="evid"><summary>Evidence the memo draws on (<span id="evidn">0</span> library entries)</summary><ol id="evidlist"></ol></details>
+  </section>
+
+  <section class="panel" aria-labelledby="rankh">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap">
+      <h2 id="rankh">Seat rankings</h2>
+      <span class="note" id="ranknote">Sort by missing homes, MP leverage, margin or stalled permissions. Select a row to load the seat.</span>
+    </div>
+    <div class="controls">
+      <div class="ctl"><label for="ftype">Area type</label><select id="ftype"><option value="">All types</option></select></div>
+      <div class="ctl"><label for="fparty">MP's party</label><select id="fparty"><option value="">All parties</option></select></div>
+      <div class="ctl"><label for="fborough">Council</label><select id="fborough"><option value="">All of London</option></select></div>
+      <div class="ctl"><label for="fsort">Sort by</label><select id="fsort"><option value="gap">Most homes missing</option><option value="prio">MP leverage</option><option value="margin">Closest seats</option><option value="stalled">Most stalled permissions</option></select></div>
+    </div>
+    <details class="adjust"><summary>Adjust the assumptions</summary><div class="controls">
+      <div class="ctl"><label for="wtot">How many homes London should build a year</label><select id="wtot"><option value="52287">London Plan 2021: 52,287</option><option value="55800" selected>Draft London Plan: 55,800</option><option value="88000">Government's assessed need: ~88,000</option></select></div>
+      <div class="ctl"><label for="wclose">What makes an MP winnable: a close seat vs. residents split on housing</label><input type="range" id="wclose" min="0" max="100" value="50"><output id="wcloseo">50 / 50</output></div>
+    </div></details>
+    <div class="tablewrap"><table id="rank"><thead><tr>
+      <th class="num">#</th><th>Seat</th><th>Area type</th><th class="num">Homes missing a year</th><th class="num">Residents worried</th><th class="num">2024 margin</th><th>MP</th><th>Main blocker</th><th class="num">MP leverage</th>
+    </tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <section class="panel" aria-labelledby="voiceh">
+    <div class="eyebrow">The evidence</div><h2 id="voiceh">Who decides what gets built: demand, or the people already here?</h2>
+    <p class="lede" style="margin-bottom:14px">If building followed need, the places people most want to move to would build most. They don't. Each finding below compares the top and bottom thirds of London's seats, with what it means for policy.</p>
+    <div class="vt">
+      <div><p class="note" style="margin:0 0 6px">Each dot is a seat. Further right: more people trying to move in. Higher: more residents worried about housing. Colour: area type, as on the map.</p><div class="mapbox" id="scbox"><svg id="scatter" class="sc" role="img" aria-label="Scatter of outside demand against resident concern"></svg><div class="tip" id="tip2" hidden></div></div></div>
+      <div class="findings" id="findings"></div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="gameh">
+    <h2 id="gameh">The decision each area type calls for</h2>
+    <p class="lede" style="margin-bottom:14px">An MP backs more homes when the voters who reward it outweigh the voters who punish it. Market demand says whether homes would actually get built; resident concern says which way the MP's own voters lean.</p>
+    <div class="game" id="game"></div>
+  </section>
+
+  <section class="panel admin" id="admin" hidden aria-labelledby="adminh">
+    <div class="labhead"><div><div class="eyebrow">Editors only</div><h2 id="adminh">Data back end</h2></div><span class="note">Changes here update the tool for everyone viewing it.</span></div>
+    <div class="stats adminstats" id="adminstats"></div>
+    <div class="admrow">
+      <div class="admbox"><h3>Import seat data</h3><p class="note">A JSON array of objects, each with <code>code</code> (ONS constituency code) plus any fields to update, e.g. <code>[{"code":"E14001312","homes":412,"V":0.21,"vEst":false}]</code>. Use it to load Datahub completions or the full Forest polling.</p>
+        <label class="filebtn" for="impfile">Choose JSON file</label><input type="file" id="impfile" accept="application/json,.json">
+        <div class="confirm" id="impconfirm" hidden><span id="impsummary"></span><button type="button" class="primary" id="impyes">Import</button><button type="button" id="impno">Cancel</button></div></div>
+      <div class="admbox"><h3>Reset from snapshot</h3><p class="note">Writes the page's built-in seats, borough data, policy library and settings to the database. Use once to set up, or to undo a bad import. Saved memos are kept.</p>
+        <button type="button" id="seedbtn">Reset database</button>
+        <div class="confirm" id="seedconfirm" hidden><span>This overwrites all 75 seats and the library.</span><button type="button" class="primary" id="seedyes">Overwrite</button><button type="button" id="seedno">Cancel</button></div></div>
+    </div>
+    <p class="note" id="adminmsg" role="status"></p>
+  </section>
+
+  <section class="panel">
+    <details>
+      <summary>How the numbers are built, and what is still placeholder</summary>
+      <div class="method" id="method"></div>
+    </details>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const DATA = __DATA__;
+DATA.boroughs = __BOROUGHS__;
+const SNAP = {rows:JSON.parse(JSON.stringify(DATA.rows)), boroughs:JSON.parse(JSON.stringify(DATA.boroughs)), kb:__KB__, version:DATA.version, target:DATA.target, vModel:DATA.vModel, wtbTotal:DATA.wtbTotal};
+const PC = __PC__;
+const GEO = __GEO__;
+const ROWS = DATA.rows;
+const BIV = [ // [voterTier][marketTier]  (Stevens 3x3)
+  ["#e4e8ec","#b5c0da","#6c83b5"],
+  ["#b8d6be","#90b2b3","#567994"],
+  ["#73ae80","#5a9178","#2a5a5b"]];
+const TYPES = {
+  locked:{label:"Locked out", color:"#6c83b5", who:"High outside demand · residents unbothered",
+    ask:"The pressure has to come from outside the seat. Ask the MP to back the borough hitting its housing target in public, support the Mayor's call-in and appeal routes on refused schemes, and push voter registration among renters and recent arrivals.",
+    logic:"Developers would build, but the MP's own voters don't reward it. A local campaign alone can't flip the MP's calculation, so it changes who counts: register the people being priced out, and use decision-makers above the borough."},
+  ready:{label:"Ready to build", color:"#2a5a5b", who:"High outside demand · residents want homes",
+    ask:"Politics is already on side. Ask the MP to press the council on delivery: planning officer capacity, stalled permissions, council-owned land.",
+    logic:"Both the market and the MP's voters want homes, so persuasion adds little. The gap is capacity. Hold the MP to delivery rather than spending effort changing minds."},
+  worried:{label:"Worried, no market", color:"#73ae80", who:"Low outside demand · residents anxious",
+    ask:"More permissions won't get homes built here. Ask the MP to back public money: Affordable Homes Programme bids, council-led and social-rent schemes.",
+    logic:"The voters want homes but prices don't cover the cost of building. This is a funding problem, not a planning one."},
+  settled:{label:"Settled", color:"#e4e8ec", who:"Low outside demand · residents unbothered",
+    ask:"Low priority for a housing campaign. Watch for new transport links that could raise demand.",
+    logic:"Neither the market nor the voters are pushing. Campaign effort does more elsewhere."},
+  middle:{label:"Middle ground", color:"#90b2b3", who:"Moderate on at least one side",
+    ask:"This is a persuasion seat. Local evidence of who is being priced out, such as teachers, nurses and grown-up children, moves the MP most.",
+    logic:"The MP is closest to indifferent here. Small shifts in visible voter pressure can tip the balance, which makes these seats worth the most per hour of campaigning."}
+};
+const PARTY = {"Labour":"Lab","Labour/Co-operative":"Lab Co-op","Conservative":"Con","Liberal Democrat":"Lib Dem","Reform UK":"Reform","Independent":"Ind"};
+const LAYERS = [
+  {id:"type",label:"Area type"},
+  {id:"gap",label:"Missing homes"},
+  {id:"prio",label:"MP leverage"},
+  {id:"M",label:"Outside demand"},
+  {id:"V",label:"Residents worried"},
+  {id:"margin",label:"Seat margin"},
+  {id:"blocker",label:"Main blocker"}];
+
+let state = {layer:"gap", sel:null, wClose:.5, total:55800, ftype:"", fparty:"", fborough:"", sort:"gap", view:"geo"};
+
+function pctRank(arr, key){
+  const vals = arr.map(r=>r[key]).slice().sort((a,b)=>a-b);
+  return r => { const v=r[key]; let lo=0,hi=0; vals.forEach(x=>{if(x<v)lo++; if(x<=v)hi++;}); return ((lo+hi)/2)/vals.length; };
+}
+const tier = p => p < 1/3 ? 0 : p < 2/3 ? 1 : 2;
+
+function compute(){
+  const mP = pctRank(ROWS,"wtbPer1k"), vP = pctRank(ROWS,"V");
+  ROWS.forEach(r=>{ r.Mp=mP(r); r.Vp=vP(r); r.Mt=tier(r.Mp); r.Vt=tier(r.Vp);
+    r.type = r.Mt===2&&r.Vt===2?"ready": r.Mt===2&&r.Vt===0?"locked": r.Mt===0&&r.Vt===2?"worried": r.Mt===0&&r.Vt===0?"settled":"middle";
+    });
+  const rawT = ROWS.reduce((s,r)=>s+(r.raw||0),0);
+  ROWS.forEach(r=>{ r.target = state.total*(r.raw||0)/rawT; r.gap=Math.max(0,r.target-r.homes); r.bpd=r.homes/Math.max(r.dwellings||1,1)*1000;
+    r.swing = 1-Math.abs(2*r.Vp-1); r.close = 1/(1+r.marginPct/5);
+    r.dP = state.wClose*r.close + (1-state.wClose)*r.swing; });
+  const gmax = Math.max(...ROWS.map(r=>r.gap));
+  ROWS.forEach(r=>{ r.prioRaw=(r.gap/gmax)*r.dP; });
+  ROWS.forEach(r=>r.bpk=r.homes/Math.max(r.wtbGap,1)); const bP=pctRank(ROWS,'bpk'); ROWS.forEach(r=>r.bpkP=bP(r));
+  const pmax = Math.max(...ROWS.map(r=>r.prioRaw));
+  ROWS.forEach(r=>{ r.prio = 100*r.prioRaw/pmax; });
+  const order = ROWS.slice().sort((a,b)=>b.prio-a.prio); order.forEach((r,i)=>r.rank=i+1);
+}
+
+// ---------- colour helpers ----------
+function cssVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function hex2rgb(h){h=h.replace('#','');return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16));}
+function mix(a,b,t){const A=hex2rgb(a),B=hex2rgb(b);return `rgb(${A.map((x,i)=>Math.round(x+(B[i]-x)*t)).join(',')})`;}
+function lum(c){const m=c.startsWith('#')?hex2rgb(c):c.match(/\d+/g);const [r,g,b]=m.map(Number);return (0.299*r+0.587*g+0.114*b)/255;}
+function seq(t){return mix(cssVar('--seq0'),cssVar('--seq1'),Math.max(0,Math.min(1,t)));}
+function fill(r){
+  switch(state.layer){
+    case "type": return BIV[r.Vt][r.Mt];
+    case "gap": { const mx=Math.max(...ROWS.map(x=>x.gap)); return seq(r.gap/mx); }
+    case "prio": return seq(r.prio/100);
+    case "M": return seq(r.Mp);
+    case "V": return seq(r.Vp);
+    case "margin": return seq(1-Math.min(1,r.marginPct/40));
+    case "blocker": return BLOCK[blockCat(r)].c;
+  }
+}
+const pts = m => (m<1?m.toFixed(2):m.toFixed(1))+' pts';
+const fmt = n => Math.round(n).toLocaleString('en-GB');
+const pc1 = n => (n*100).toFixed(0)+"%";
+function partyShort(r){ return r.mpParty ? (PARTY[r.mpParty]||r.mpParty) : "Vacant"; }
+function abbr(n){ return n.replace(/,/g,'').split(/\s+/).filter(w=>!/^(and|of|the|upon)$/i.test(w)).map(w=>w[0]).join('').slice(0,3).toUpperCase(); }
+
+// ---------- map ----------
+const S=13, W=Math.sqrt(3)*S;
+function hexPts(cx,cy){const p=[];for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-30);p.push((cx+S*Math.cos(a)).toFixed(1)+","+(cy+S*Math.sin(a)).toFixed(1));}return p.join(" ");}
+function drawMap(){
+  if(state.view==="hex") return drawHex();
+  const svg=document.getElementById('map'); svg.setAttribute('viewBox',`-4 -4 ${GEO.w+8} ${GEO.h+8}`);
+  const sel=ROWS.find(r=>r.code===state.sel);
+  let h=ROWS.map(r=>`<path class="seat${r.vEst?' est':''}${state.fborough&&r.borough!==state.fborough?' dim':''}" data-code="${r.code}" tabindex="0" role="button" aria-label="${r.name}" d="${GEO.seats[r.code]}" fill="${fill(r)}"></path>`).join("");
+  h+=`<path class="boro" d="${GEO.boroughs}"></path>`;
+  if(sel){ const d=GEO.seats[sel.code], c=GEO.cent[sel.code]; const x=Math.max(90,Math.min(GEO.w-90,c[0]));
+    h+=`<path class="selo2" d="${d}"></path><path class="selo" d="${d}"></path><text x="${x}" y="${c[1]+5}" text-anchor="middle" style="font-size:17px">${sel.name}</text>`; }
+  svg.innerHTML=h;
+  const tip=document.getElementById('tip'), box=document.getElementById('mapbox');
+  svg.querySelectorAll('path.seat').forEach(g=>{
+    const r=ROWS.find(x=>x.code===g.dataset.code);
+    g.addEventListener('mousemove',e=>{ const b=box.getBoundingClientRect();
+      tip.innerHTML=`<b>${r.name}</b> · ${r.borough}<br>${fmt(r.gap)} missing homes a year · built ${fmt(r.homes)}<br>Main blocker: ${BLOCK[blockCat(r)].l}<br>${TYPES[r.type].label} · residents concerned ${pc1(r.V)}${r.vEst?' (est.)':''}`;
+      tip.hidden=false; let x=e.clientX-b.left+box.scrollLeft+12, y=e.clientY-b.top+12; if(x>b.width-250)x-=270; tip.style.left=x+'px'; tip.style.top=y+'px'; });
+    g.addEventListener('mouseleave',()=>tip.hidden=true);
+    g.addEventListener('click',()=>select(r.code,true));
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(r.code,true);}});
+  });
+}
+document.querySelectorAll('.seg button[data-v]').forEach(b=>b.onclick=()=>{ state.view=b.dataset.v; document.querySelectorAll('.seg button[data-v]').forEach(x=>x.setAttribute('aria-pressed',x===b)); drawMap(); });
+function drawHex(){
+  const svg=document.getElementById('map');
+  const pos=ROWS.map(r=>({r, x:r.q*W+(Math.abs(r.r)%2?W/2:0), y:-r.r*1.5*S}));
+  const xs=pos.map(p=>p.x), ys=pos.map(p=>p.y);
+  const x0=Math.min(...xs)-W, y0=Math.min(...ys)-S*1.4, w=Math.max(...xs)-x0+W, h=Math.max(...ys)-y0+S*1.4;
+  svg.setAttribute('viewBox',`${x0} ${y0} ${w} ${h}`);
+  svg.innerHTML = pos.map(p=>{
+    const f=fill(p.r), dark=lum(f)<.5;
+    return `<g data-code="${p.r.code}" style="${state.fborough&&p.r.borough!==state.fborough?'opacity:.16':''}" tabindex="0" role="button" aria-label="${p.r.name}"><polygon class="hex${p.r.vEst?' est':''}${state.sel===p.r.code?' sel':''}" points="${hexPts(p.x,p.y)}" fill="${f}"></polygon><text x="${p.x}" y="${p.y+3}" text-anchor="middle" class="${dark?'lt':''}">${abbr(p.r.name)}</text></g>`;
+  }).join("");
+  const tip=document.getElementById('tip'), box=document.getElementById('mapbox');
+  svg.querySelectorAll('g').forEach(g=>{
+    const r=ROWS.find(x=>x.code===g.dataset.code);
+    g.addEventListener('mousemove',e=>{ const b=box.getBoundingClientRect();
+      tip.innerHTML=`<b>${r.name}</b><br>${TYPES[r.type].label} · ${fmt(r.wtbGap)} home-seekers unserved<br>${fmt(r.gap)} missing homes / yr · ${BLOCK[blockCat(r)].l}<br>Concerned: ${pc1(r.V)}${r.vEst?' (est.)':''} · Margin ${r.marginPct.toFixed(1)} pts`;
+      tip.hidden=false; let x=e.clientX-b.left+box.scrollLeft+12, y=e.clientY-b.top+12; if(x>b.width-230)x-=250; tip.style.left=x+'px'; tip.style.top=y+'px'; });
+    g.addEventListener('mouseleave',()=>tip.hidden=true);
+    g.addEventListener('click',()=>select(r.code,true));
+    g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();select(r.code,true);}});
+  });
+}
+function drawLegend(){
+  const el=document.getElementById('legend');
+  if(state.layer==="type"){
+    let cells=""; for(let v=2;v>=0;v--) for(let m=0;m<3;m++) cells+=`<div style="background:${BIV[v][m]}"></div>`;
+    el.innerHTML=`<div class="bivar"><div class="axl" style="writing-mode:vertical-rl;transform:rotate(180deg)">Residents concerned →</div><div><div class="cells">${cells}</div><div class="axl" style="margin-top:4px">Market demand →</div></div></div>
+    <div class="types">${["locked","ready","worried","settled","middle"].map(k=>`<div><span class="sw" style="background:${TYPES[k].color}"></span><b style="color:var(--ink)">${TYPES[k].label}</b> · ${TYPES[k].who}</div>`).join("")}</div>`;
+  } else if(state.layer==="blocker"){
+    const n={}; ROWS.forEach(r=>{const k=blockCat(r); n[k]=(n[k]||0)+1;});
+    el.innerHTML=`<div class="catleg">${Object.entries(BLOCK).filter(([k])=>n[k]).map(([k,b])=>`<span><i style="background:${b.c}"></i>${b.l} (${n[k]})</span>`).join("")}</div>`;
+  } else {
+    const L={gap:["0","most homes missing"],prio:["low","highest priority"],M:["least demand","most home-seekers per resident"],V:["least concerned","most concerned"],margin:["safe (40+ pts)","knife-edge"]}[state.layer];
+    el.innerHTML=`<div class="seqleg"><div class="seqbar" style="background:linear-gradient(90deg,${seq(0)},${seq(1)})"></div><div class="seqlab"><span>${L[0]}</span><span>${L[1]}</span></div></div>`;
+  }
+}
+function drawLayers(){
+  document.getElementById('layers').innerHTML=LAYERS.map(l=>`<button type="button" data-l="${l.id}" aria-pressed="${state.layer===l.id}">${l.label}</button>`).join("");
+  document.querySelectorAll('#layers button').forEach(b=>b.onclick=()=>{state.layer=b.dataset.l;drawLayers();drawMap();drawLegend();});
+}
+
+// ---------- plain-language layer ----------
+const CONF_LABEL={strong:"Strong evidence",moderate:"Some evidence",tentative:"Early signal"};
+const FIX={
+ "Homeowner resistance is holding supply back":["Show visible local support for specific schemes at planning committee, and ask the MP to back the borough's target in public.","Campaigners and the MP. The Mayor can call in refused schemes of 50+ homes."],
+ "Permissions are granted but not built":["Get stalled sites moving: the 20% affordable fast-track route, temporary CIL relief and the Mayor's stalled-sites fund.","Mayor/GLA, the council and developers."],
+ "The council says no more often than most":["Challenge refusals: Mayor call-in for 50+ homes and appeals. Where the Delivery Test is failed, the presumption in favour of development applies.","Mayor, Planning Inspectorate; campaigners speaking at committee."],
+ "Brownfield land could close much of the gap":["Allocate and give permission on registered brownfield sites first, starting with public land.","The council (Local Plan) and GLA."],
+ "Many adults here can't vote on it":["Run a renter registration drive aimed at recent movers.","Council electoral services and campaigners."],
+ "High demand, but schemes aren't getting built":["Make schemes viable: the 20% fast-track route, CIL relief, stalled-sites funding.","Mayor and government."],
+ "Political will exists; delivery capacity is the gap":["Ask the MP to press the council on delivery: planning officers, council-owned land, stalled permissions.","The MP and the council."],
+ "Supply is concentrated here, not where demand is":["Make sure schools, GPs and transport keep up here, and argue for targets to shift toward high-demand areas that build little.","GLA (London Plan targets) and the council."],
+ "The need is local affordability, not outside demand":["Bid for social rent grant and use council tax premiums on empty homes.","The council and GLA."],
+ "Need centres on social housing and estate renewal":["Grant-funded social rent and estate infill, with resident ballots where homes are demolished.","The council, housing associations and GLA."],
+ "Under-registered renters could decide this seat":["Register renters before the next election; the margin is small enough for them to matter.","Campaigners and council electoral services."],
+ "The MP is highly exposed to any organised bloc":["A small, visible group of pro-housing constituents meeting the MP will be noticed here.","Campaigners."],
+ "Green Belt near stations could be in play":["Test low-quality Green Belt sites within walking distance of stations, as the draft London Plan would allow.","The council and GLA."],
+ "No strong signal from current data":["No single blocker stands out. Watch the pipeline and revisit when full polling arrives.","—"]};
+function fixFor(h){ return FIX[h.t]||["",""]; }
+function topBlocker(r){ const H=hypotheses(r).filter(h=>!/exposed|Green Belt|No strong/.test(h.t)); return H.length?H[0].t:"No single blocker"; }
+const fmtK=n=>n>=1e6?(n/1e6).toFixed(2)+"m":n>=10000?Math.round(n/1000)+"k":fmt(n);
+function seatBtns(list){ return `<div class="seatlinks">${list.map(r=>`<button type="button" data-code="${r.code}">${r.name}</button>`).join("")}</div>`; }
+// ---------- Brief workflow: steps that drive the tool ----------
+const BLOCK={
+  politics:{l:"Planning politics",c:"#b5473f"},
+  stalled:{l:"Stalled or unviable schemes",c:"#dd8a2e"},
+  capacity:{l:"Council delivery capacity",c:"#2f5d8a"},
+  land:{l:"Unused brownfield land",c:"#6b8e3a"},
+  afford:{l:"Affordability / social housing",c:"#8a5a9e"},
+  voice:{l:"Renters without a vote",c:"#2a9d8f"},
+  concentrated:{l:"Already building a lot",c:"#9cc3d5"},
+  none:{l:"No single blocker",c:"#d3d9df"}};
+function blockCat(r){ const t=topBlocker(r);
+  if(/Homeowner|council says no/i.test(t)) return "politics";
+  if(/not built|aren't getting built/.test(t)) return "stalled";
+  if(/delivery capacity/.test(t)) return "capacity";
+  if(/Brownfield/.test(t)) return "land";
+  if(/affordability|social housing/i.test(t)) return "afford";
+  if(/can't vote|Under-registered/.test(t)) return "voice";
+  if(/concentrated/.test(t)) return "concentrated";
+  return "none"; }
+function go(id,block){ const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:block||'start'}); }
+function setLayer(l){ state.layer=l; drawLayers(); drawMap(); drawLegend(); drawStart(); }
+function setBorough(b){ state.fborough=b; document.getElementById('fborough').value=b;
+  const pick=b?ROWS.filter(r=>r.borough===b).sort((x,y)=>y.gap-x.gap)[0]:null;
+  if(pick&&(!state.sel||ROWS.find(r=>r.code===state.sel).borough!==b)) select(pick.code,false); else { drawMap(); drawTable(); drawStart(); } }
+function runMemo(){ if(!state.sel) return; go('lab'); if(SAMPLE&&!memoCtl) setTimeout(genMemo,350); }
+function drawStart(){
+  const el=document.getElementById('steps'); if(!el) return;
+  const r=state.sel?ROWS.find(x=>x.code===state.sel):null, nm=r?`<b>${r.name}</b>`:"";
+  const scope=state.fborough?ROWS.filter(x=>x.borough===state.fborough):ROWS;
+  const sum=f=>scope.reduce((s,x)=>s+(f(x)||0),0);
+  const B=state.fborough?(DATA.boroughs||{})[state.fborough]:null;
+  const cats={}; scope.forEach(x=>{const k=blockCat(x); if(k!=="none") cats[k]=(cats[k]||0)+1;}); const topc=Object.entries(cats).sort((a,b)=>b[1]-a[1])[0];
+  const seats=scope.slice().sort((a,b)=>b.gap-a.gap);
+  const memoNow=!r?"Select a seat in step 1.":!SAMPLE?"Memo writing works when this page is opened in Claude.":BK.memos[r.code]?`A brief for ${nm} is saved. Writing again replaces it.`:`2–3 page PDF for ${nm}, saved for your team.`;
+  const S=[
+   {lbl:"Scope",h:"Choose a council and seat",
+    body:`<select id="sbor" aria-label="Council">${boroughOpts()}</select><select id="sseat" aria-label="Seat"><option value="">Select a seat…</option>${seats.map(x=>`<option value="${x.code}"${x.code===state.sel?' selected':''}>${x.name} (${fmt(x.gap)} missing)</option>`).join("")}</select><form id="spcf" autocomplete="off"><input id="spc" placeholder="or postcode" aria-label="Postcode"><button class="go sec" type="submit">Find</button></form>`,
+    now:`${state.fborough||"All of London"}: ${scope.length} seats, <b>${fmt(sum(x=>x.homes))}</b> built and <b>${fmt(sum(x=>x.gap))}</b> missing a year`+(B&&B.hdt!=null?`. Delivery Test <b>${Math.round(B.hdt*100)}%</b> (${B.hdtCons})`:"")+".",done:!!r},
+   {lbl:"Assumption",h:"Set the London target",
+    body:`<select id="stot" aria-label="London target">${[["52287","London Plan 2021: 52,287 a year"],["55800","Draft London Plan: 55,800 a year"],["88000","Government assessed need: ~88,000 a year"]].map(([v,l])=>`<option value="${v}"${+v===state.total?' selected':''}>${l}</option>`).join("")}</select>`,
+    now:`Against this target London is <b>${fmt(ROWS.reduce((s,x)=>s+x.gap,0))}</b> homes a year short`+(r?`; ${nm} is <b>${fmt(r.gap)}</b> short.`:".")},
+   {lbl:"Diagnosis",h:"Find the blocker",
+    body:`<div class="row"><button type="button" class="go${state.layer==='blocker'?' sec':''}" id="sblk">Map main blockers</button>${r?`<button type="button" class="go sec" id="sdiag">Read diagnosis</button>`:""}</div>`,
+    now:(r?`${nm}: <b>${BLOCK[blockCat(r)].l.toLowerCase()}</b>. `:"")+(topc?`Most common ${state.fborough?"in "+state.fborough:"across London"}: ${BLOCK[topc[0]].l.toLowerCase()} (${topc[1]} of ${scope.length} seats).`:""),done:state.layer==="blocker"},
+   {lbl:"Output",h:"Write the policy brief",
+    body:`<button type="button" class="go" id="smemo"${!r||!SAMPLE?' disabled':''}>Write brief${r?` for ${r.name}`:""}</button>`,
+    now:memoNow,done:!!(r&&BK.memos[r.code])}];
+  el.innerHTML=S.map(s=>`<li class="step${s.done?' done':''}"><div class="lbl">${s.lbl}</div><h3>${s.h}</h3>${s.body}<div class="now">${s.now}</div></li>`).join("");
+  const on=(id,ev,f)=>{const x=document.getElementById(id); if(x) x[ev]=f;};
+  on('sbor','onchange',e=>setBorough(e.target.value));
+  on('sseat','onchange',e=>{ if(e.target.value) select(e.target.value,false); });
+  on('stot','onchange',e=>{ const w=document.getElementById('wtot'); w.value=e.target.value; w.onchange({target:w}); });
+  on('sblk','onclick',()=>{ setLayer('blocker'); go('area'); });
+  on('sdiag','onclick',()=>go('lab'));
+  on('smemo','onclick',runMemo);
+  on('spcf','onsubmit',e=>{ e.preventDefault(); const v=document.getElementById('spc').value; document.getElementById('pcin').value=v; const res=lookup(v);
+    if(res.err){ el.querySelector('.step .now').textContent=res.err; return; } select(res.code,false); });
+}
+
+function verdict(r){ const H=hypotheses(r).filter(h=>!/No strong/.test(h.t)); const tens=Math.round(r.V*10);
+  let s=`${r.name} builds about <b>${fmt(r.homes)}</b> homes a year. Given its transport, land and demand, it should be nearer <b>${fmt(r.target)}</b>`+(r.gap>0?`, so it is about <b>${fmt(r.gap)} a year short</b>.`:`, so it is keeping up.`);
+  s+=` About ${tens} in 10 residents say their neighbours worry about housing${r.vEst?" (estimated)":""}.`;
+  s+= r.marginPct<5?` The MP's majority is tiny (${r.majority<1000?fmt(r.majority)+" votes":r.marginPct.toFixed(1)+" points"}).`: r.marginPct<12?` The seat is marginal (${r.marginPct.toFixed(1)} points).`:` The seat is safe (${r.marginPct.toFixed(0)} points).`;
+  if(H.length) s+=` Main issue: <b>${H[0].t.charAt(0).toLowerCase()+H[0].t.slice(1)}</b>.`;
+  return s; }
+
+// ---------- card ----------
+function reasons(r){
+  const out=[];
+  if(r.marginPct<5) out.push(`knife-edge seat (${r.majority!=null&&r.majority<1000?fmt(r.majority)+' votes':pts(r.marginPct)})`); else if(r.marginPct<12) out.push(`marginal (${r.marginPct.toFixed(1)} pts)`);
+  if(r.swing>.7) out.push("residents split on housing");
+  if(r.gap>600) out.push(`${fmt(r.gap)} homes a year short`);
+  if(r.Mt===2) out.push("high outside demand");
+  return out.slice(0,3).join(" · ")||"—";
+}
+function drawCard(){
+  const r=ROWS.find(x=>x.code===state.sel); const el=document.getElementById('card'); if(!r){el.innerHTML="";return;}
+  const t=TYPES[r.type]; const B=(DATA.boroughs||{})[r.borough];
+  const mpLine = r.mp ? `<b>${r.mp}</b> · ${r.mpParty}${r.mpParty==="Reform UK"?" (elected as Conservative)":""}${r.mpSince&&r.mpSince>"2024-07-05"&&r.mpParty!=="Reform UK"?"":""}` : `<b>No sitting MP</b> · ${r.mpNote||""}`;
+  const maj = r.majority!=null ? `${fmt(r.majority)} votes (${r.marginPct.toFixed(1)} pts)` : `${r.marginPct.toFixed(1)} pts`;
+  el.innerHTML=`
+  <div class="top"><div><div class="eyebrow">Constituency</div><h3 style="font-size:22px">${r.name}</h3>
+    <div class="mp">${mpLine}</div><div class="mp">2024: ${r.won} won over ${r.second}, by ${maj}</div><div class="mp">Council: ${r.borough}${B?` · ${B.control||'control n/a'} · Delivery Test ${Math.round(B.hdt*100)}% (${B.hdtCons})`:''}</div></div>
+    <span class="chip" style="background:${t.color}${r.type==='ready'?';color:#fff':''}">${t.label}</span></div>
+  <p class="verdict">${verdict(r)}</p>
+  <div class="helps">${hypotheses(r).filter(h=>!/No strong/.test(h.t)).slice(0,2).map(h=>`<div class="help"><b>${fixFor(h)[0]}</b><span>Who can act: ${fixFor(h)[1]}</span></div>`).join('')}</div>
+  <details class="adjust"><summary>See the numbers</summary>
+  <div class="stats">
+    <div class="stat"><div class="k">Missing homes a year</div><div class="v">${fmt(r.gap)}</div><div class="s">Model ${fmt(r.target)} · built ${fmt(r.homes)} a year (2019/20–2024/25)</div></div>
+    <div class="stat"><div class="k">Residents who say neighbours worry about housing</div><div class="v">${pc1(r.V)}</div><div class="s">${r.vEst?'<span class="flag">Estimated, Forest reading not yet pulled</span>':`${ordinal(Math.round(r.Vp*75))} of 75 in London`}</div></div>
+    <div class="stat"><div class="k">Home-seekers the local market can't house</div><div class="v">${fmt(r.wtbGap)}</div><div class="s">${fmt(r.wtbPer1k)} per 1,000 residents · ${ordinal(Math.round(r.Mp*75))} of 75 (WhereToBuild)</div></div>
+    <div class="stat"><div class="k">Homes owned / private rent / social rent</div><div class="v">${Math.round(r.owned)} / ${Math.round(r.privRent)} / ${Math.round(r.social)}%</div><div class="s">${r.outright.toFixed(0)}% owned outright · ${Math.round(r.underocc)}% with 2+ spare bedrooms</div></div>
+    <div class="stat"><div class="k">Approved, not started · lapsed · refused (homes since 2019)</div><div class="v">${fmt(r.approvedNS)} · ${fmt(r.lapsed)} · ${fmt(r.refused)}</div><div class="s">${fmt(r.startedNC)} under construction · brownfield room for ${fmt(r.bf)}</div></div>
+    <div class="stat"><div class="k">Registered voters per 100 adults</div><div class="v">${r.regPer100.toFixed(0)}</div><div class="s">${Math.round(r.movedIn)}% moved in within a year · ${Math.round(r.overcrowd)}% overcrowded</div></div>
+  </div></details>
+  <div class="bars"><div class="k note">MP leverage ${Math.round(r.prio)}/100 · rank ${r.rank} of 75</div><div class="bar"><i style="width:${r.prio}%;background:var(--accent)"></i></div><div class="note">${reasons(r)}</div></div>
+  <div class="ask"><div class="eyebrow">Policy ask for this type of seat</div><p>${t.ask}</p></div>`;
+}
+function ordinal(n){n=Math.max(1,n);const s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+
+// ---------- table ----------
+function drawTable(){
+  const tb=document.querySelector('#rank tbody');
+  const S={prio:(a,b)=>b.prio-a.prio,gap:(a,b)=>b.gap-a.gap,margin:(a,b)=>a.marginPct-b.marginPct,stalled:(a,b)=>(b.approvedNS+b.lapsed)-(a.approvedNS+a.lapsed)}[state.sort]||((a,b)=>b.prio-a.prio);
+  const list=ROWS.slice().sort(S).filter(r=>(!state.ftype||r.type===state.ftype)&&(!state.fparty||partyShort(r)===state.fparty)&&(!state.fborough||r.borough===state.fborough));
+  tb.innerHTML=list.map(r=>`<tr data-code="${r.code}" class="${state.sel===r.code?'sel':''}">
+    <td class="num">${r.rank}</td>
+    <td><b>${r.name}</b><span class="why">${reasons(r)}</span></td>
+    <td><span class="chip" style="background:${TYPES[r.type].color}${r.type==='ready'?';color:#fff':''}">${TYPES[r.type].label}</span></td>
+    <td class="num">${fmt(r.gap)}</td>
+    <td class="num">${pc1(r.V)}${r.vEst?'<span class="flag"> est.</span>':''}</td>
+    <td class="num">${r.majority!=null&&r.majority<1000?fmt(r.majority)+" votes":pts(r.marginPct)}</td>
+    <td>${r.mp||'Vacant'} <span class="note">${partyShort(r)}</span></td><td class="blk">${topBlocker(r)}</td>
+    <td class="num"><div class="pbar">${Math.round(r.prio)}<div class="bar"><i style="width:${r.prio}%;background:var(--accent)"></i></div></div></td></tr>`).join("") || `<tr><td colspan="9" class="note">No seats match these filters.</td></tr>`;
+  tb.querySelectorAll('tr[data-code]').forEach(tr=>tr.onclick=()=>select(tr.dataset.code,true));
+}
+function select(code,scroll){
+  const _r=ROWS.find(x=>x.code===code); if(state.fborough&&_r&&_r.borough!==state.fborough){ state.fborough=''; document.getElementById('fborough').value=''; }
+  state.sel=code; drawMap(); drawCard(); drawTable(); drawScatter(); drawLab(); drawStart();
+  const r=ROWS.find(x=>x.code===code); document.getElementById('pcmsg').textContent = r ? `Showing ${r.name}.` : "";
+  if(scroll && window.innerWidth<900) document.getElementById('card').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ---------- postcode ----------
+function lookup(raw){
+  const s=raw.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(s.length<2) return {err:"Enter a postcode, for example SE15 5DQ."};
+  let out, inw=null;
+  if(PC[s]) out=s; else if(s.length>=5){ out=s.slice(0,-3); inw=s.slice(-3); }
+  if(!out||!PC[out]) return {err:`${raw.trim().toUpperCase()} isn't a London postcode in this lookup. Check for typos, or try the first half (e.g. SE15).`};
+  const [mode,ex]=PC[out]; let idx=mode, partial=!inw;
+  if(inw){ for(const k in ex){ const str=ex[k]; for(let i=0;i<str.length;i+=3){ if(str.substr(i,3)===inw){ idx=+k; } } } }
+  if(idx===-1) return {err:`${raw.trim().toUpperCase()} is outside Greater London.`};
+  return {code:ROWS[idx].code, partial};
+}
+document.getElementById('pcform').addEventListener('submit',e=>{
+  e.preventDefault(); const res=lookup(document.getElementById('pcin').value);
+  if(res.err){document.getElementById('pcmsg').textContent=res.err;return;}
+  select(res.code,true);
+  if(res.partial) document.getElementById('pcmsg').textContent=`Showing the seat covering most of ${document.getElementById('pcin').value.toUpperCase()}. Enter the full postcode to be exact.`;
+});
+
+// ---------- controls ----------
+function fillFilters(){
+  document.getElementById('ftype').innerHTML='<option value="">All types</option>'+Object.entries(TYPES).map(([k,t])=>`<option value="${k}">${t.label}</option>`).join("");
+  const ps=[...new Set(ROWS.map(partyShort))].sort();
+  document.getElementById('fparty').innerHTML='<option value="">All parties</option>'+ps.map(p=>`<option>${p}</option>`).join("");
+  document.getElementById('fborough').innerHTML=boroughOpts();
+}
+function boroughOpts(){ return '<option value="">All of London</option>'+[...new Set(ROWS.map(r=>r.borough))].sort().map(b=>`<option${state.fborough===b?' selected':''}>${b}</option>`).join(""); }
+document.getElementById('fborough').onchange=e=>setBorough(e.target.value);
+document.getElementById('fsort').onchange=e=>{state.sort=e.target.value;drawTable();};
+document.getElementById('ftype').onchange=e=>{state.ftype=e.target.value;drawTable();};
+document.getElementById('fparty').onchange=e=>{state.fparty=e.target.value;drawTable();};
+document.getElementById('wclose').oninput=e=>{state.wClose=e.target.value/100;document.getElementById('wcloseo').textContent=`${e.target.value} / ${100-e.target.value}`;compute();drawMap();drawCard();drawTable();drawScatter();drawLab();};
+document.getElementById('wtot').onchange=e=>{state.total=+e.target.value;compute();drawMap();drawCard();drawTable();drawScatter();drawLab();drawStart();};
+
+function drawGame(){
+  const counts={}; ROWS.forEach(r=>counts[r.type]=(counts[r.type]||0)+1);
+  document.getElementById('game').innerHTML=["locked","ready","middle","worried","settled"].map(k=>{const t=TYPES[k];return `<div class="cell">
+    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span class="chip" style="background:${t.color}${k==='ready'?';color:#fff':''}">${t.label}</span><span class="note">${counts[k]||0} seats</span></div>
+    <div class="who">${t.who}</div><p>${t.logic}</p><p><b style="color:var(--ink)">Ask:</b> ${t.ask}</p></div>`;}).join("");
+}
+function drawMethod(){
+  const m=DATA.vModel, measured=ROWS.filter(r=>!r.vEst).length;
+  document.getElementById('method').innerHTML=`
+  <p><b>Outside demand (WhereToBuild, Warwick).</b> The housing gap: people searching for homes minus homes available (sales and rentals, 2019–2024), by neighbourhood (MSOA). The file shared had its numbers turned into clock durations by a spreadsheet locale setting. I rebuilt them: each value's decimals survive intact, and the integer part was pinned down by requiring gap = gap-per-km² × area, with area measured from ONS boundaries. That recovered 954 of 1,002 London neighbourhoods exactly; 48 were ambiguous or unrecoverable and use their borough's median density (flagged per seat). Tightness couldn't be recovered from this file. Neighbourhoods are shared across seats by area overlap. Total London gap: ${fmt(DATA.wtbTotal)} home-seekers.</p>
+  <p><b>Resident concern (voter side).</b> Prime Radiant polling via Forest, 17 Aug 2026 wave: share who say their neighbours are concerned about housing shortages. Measured for ${measured} seats. The other ${75-measured} are estimated from a London regression on home ownership, social renting, WhereToBuild demand and price-to-earnings (R² ${m.r2}, n=${m.n}, typical error ±${m.mae} points) and shown with a dashed outline.</p>
+  <p><b>Missing homes model.</b> For each of London's 1,002 neighbourhoods, capacity is the build rate reached by the best-performing fifth of neighbourhoods with similar public transport access (PTAL) and brownfield capacity (quantile regression, 80th percentile). Capacity is scaled by WhereToBuild demand per existing home (elasticity 0.5), then calibrated so London's total matches the target you choose above. Missing homes = model minus actual Planning London Datahub completions (annual average 2019/20–2024/25), never below zero, summed to seats.</p>
+  <p><b>Building activity.</b> Planning London Datahub: completions, approved-not-started, under construction, lapsed and refused homes since 2019; brownfield capacity from the brownfield land register. Borough context: Housing Delivery Test 2025, net additional dwellings, major-scheme approval rates, Council Taxbase 2025 empty and second homes, and May 2026 council control.</p>
+  <p><b>Area type.</b> Seats split into thirds on outside demand per resident and on resident concern. The four corners get named types; everything else is middle ground.</p>
+  <p><b>Persuadability.</b> <code>closeness = 1 / (1 + margin/5)</code>, <code>split = 1 − |2 × concern rank − 1|</code>, blended by the slider. <code>Priority = missing homes (share of max) × persuadability</code>. Transport access and brownfield capacity already enter through the missing-homes model.</p>
+  <p><b>Seats and MPs.</b> 2024 results from the House of Commons Library. Current MPs from mySociety records (Sep 2026). Council = the borough covering most of the seat. Postcode lookup from the ONS postcode directory via asibs/postcode-lookup-generator.</p>
+  <p><b>Limits.</b> 75 seats is a small sample and concern is modelled, not surveyed seat by seat. This shows patterns, not causes. Borough councils decide planning applications, so the MP is a pressure lever, not the decision-maker.</p>`;
+}
+
+// ---------- voice test ----------
+function spearman(x,y){const rk=a=>{const s=a.map((v,i)=>[v,i]).sort((p,q)=>p[0]-q[0]);const r=new Array(a.length);let i=0;while(i<s.length){let j=i;while(j+1<s.length&&s[j+1][0]===s[i][0])j++;for(let k=i;k<=j;k++)r[s[k][1]]=(i+j)/2;i=j+1;}return r;};
+  const a=rk(x),b=rk(y),n=a.length,ma=a.reduce((s,v)=>s+v,0)/n,mb=b.reduce((s,v)=>s+v,0)/n;let c=0,va=0,vb=0;for(let i=0;i<n;i++){c+=(a[i]-ma)*(b[i]-mb);va+=(a[i]-ma)**2;vb+=(b[i]-mb)**2;}return c/Math.sqrt(va*vb);}
+function drawScatter(){
+  const svg=document.getElementById('scatter'),W0=640,H0=380,m={l:52,r:16,t:16,b:44};svg.setAttribute('viewBox',`0 0 ${W0} ${H0}`);
+  const P=ROWS.filter(r=>!r.vEst&&r.wtbPer1k>0);
+  const lx=v=>Math.log10(v), xs=P.map(r=>lx(r.wtbPer1k)), x0=Math.floor(Math.min(...xs)*10)/10, x1=Math.ceil(Math.max(...xs)*10)/10;
+  const y0=0,y1=0.6, X=v=>m.l+(lx(v)-x0)/(x1-x0)*(W0-m.l-m.r), Y=v=>H0-m.b-(v-y0)/(y1-y0)*(H0-m.t-m.b);
+  let g='';[0,.1,.2,.3,.4,.5,.6].forEach(v=>g+=`<line class="gl" x1="${m.l}" x2="${W0-m.r}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${m.l-8}" y="${Y(v)+4}" text-anchor="end">${v*100}%</text>`);
+  [10,20,50,100,200,500].filter(v=>lx(v)>=x0&&lx(v)<=x1).forEach(v=>g+=`<line class="gl" y1="${m.t}" y2="${H0-m.b}" x1="${X(v)}" x2="${X(v)}"/><text x="${X(v)}" y="${H0-m.b+16}" text-anchor="middle">${v}</text>`);
+  g+=`<text x="${(W0+m.l)/2}" y="${H0-6}" text-anchor="middle">Home-seekers unserved per 1,000 residents (log scale) →</text><text transform="translate(12 ${(H0-m.b)/2}) rotate(-90)" text-anchor="middle">Residents worried about housing →</text>`;
+  g+=P.map(r=>`<circle data-code="${r.code}" class="${state.sel===r.code?'sel':''}" cx="${X(r.wtbPer1k)}" cy="${Y(r.V)}" r="6" fill="${BIV[r.Vt][r.Mt]}"/>`).join('');
+  svg.innerHTML=g;
+  const tip=document.getElementById('tip2'),box=document.getElementById('scbox');
+  svg.querySelectorAll('circle').forEach(c=>{const r=ROWS.find(x=>x.code===c.dataset.code);
+    c.addEventListener('mousemove',e=>{const b=box.getBoundingClientRect();tip.innerHTML=`<b>${r.name}</b><br>${fmt(r.wtbPer1k)} per 1,000 · ${pc1(r.V)} concerned<br>${TYPES[r.type].label}`;tip.hidden=false;let x=e.clientX-b.left+12;if(x>b.width-230)x-=250;tip.style.left=x+'px';tip.style.top=(e.clientY-b.top+12)+'px';});
+    c.addEventListener('mouseleave',()=>tip.hidden=true); c.addEventListener('click',()=>select(r.code,true));});
+  const M=ROWS.filter(r=>!r.vEst), bd=r=>r.homes/r.dwellings*1000;
+  const thirds=(arr,key)=>{ const s=arr.slice().sort((a,b)=>key(a)-key(b)), n=Math.floor(s.length/3); return [s.slice(0,n),s.slice(-n)]; };
+  const avg=(arr,f)=>arr.reduce((x,r)=>x+f(r),0)/arr.length;
+  const [dLo,dHi]=thirds(ROWS,r=>r.wtbPer1k), [oLo,oHi]=thirds(ROWS,r=>r.owned), [pLo,pHi]=thirds(ROWS,r=>r.privRent), [mLo,mHi]=thirds(M,r=>r.owned);
+  const f=v=>(v>=0?'+':'−')+Math.abs(v).toFixed(2);
+  const r2=spearman(ROWS.map(bd),ROWS.map(r=>r.wtbPer1k)), r3=spearman(ROWS.map(bd),ROWS.map(r=>r.owned)), r4=spearman(ROWS.map(r=>r.regPer100),ROWS.map(r=>r.privRent)), r5=spearman(M.map(r=>r.V),M.map(r=>r.owned));
+  const bOH=avg(oHi,bd), bOL=avg(oLo,bd);
+  document.getElementById('findings').innerHTML=`
+   <div class="fnd"><div class="cmp">${avg(dHi,bd).toFixed(1)} vs ${avg(dLo,bd).toFixed(1)}</div><p><b style="color:var(--ink)">High-demand seats build ${avg(dHi,bd)<avg(dLo,bd)?"less than":"no more than"} low-demand ones.</b> New homes a year per 1,000 existing homes, in the third of seats with most outside demand vs the third with least.</p><div class="so">So what: targets and funding follow past delivery, not need. Shifting targets toward high-demand areas is the biggest lever.</div><div class="rho">rank correlation across 75 seats ${f(r2)}; 1,002 neighbourhoods −0.10</div></div>
+   <div class="fnd"><div class="cmp">${bOH.toFixed(1)} vs ${bOL.toFixed(1)}</div><p><b style="color:var(--ink)">Owner-dominated seats build about ${Math.round((1-bOH/bOL)*100)}% less.</b> New homes a year per 1,000 existing homes, most-owned third vs least-owned third.</p><div class="so">So what: where existing owners dominate, local politics holds building back. Pressure has to come from above the borough or from organised local supporters.</div><div class="rho">rank correlation ${f(r3)} (p &lt; 0.001)</div></div>
+   <div class="fnd"><div class="cmp">${avg(pHi,r=>r.regPer100).toFixed(0)} vs ${avg(pLo,r=>r.regPer100).toFixed(0)}</div><p><b style="color:var(--ink)">Renter-heavy seats have fewer people on the register.</b> Registered voters per 100 adults, seats with most private renters vs fewest.</p><div class="so">So what: the people most hurt by the shortage are least heard at elections. Registration drives change who MPs answer to.</div><div class="rho">rank correlation ${f(r4)}</div></div>
+   <div class="fnd"><div class="cmp">${Math.round(avg(mHi,r=>r.V)*100)}% vs ${Math.round(avg(mLo,r=>r.V)*100)}%</div><p><b style="color:var(--ink)">Owners worry far less about housing.</b> Residents saying neighbours worry about housing, most-owned third of seats vs least-owned (seats with measured polling).</p><div class="so">So what: MPs in owner-dominated seats hear little pressure to build. The case has to be made to them directly.</div><div class="rho">rank correlation ${f(r5)}</div></div>
+   <p class="note">These are patterns across London, not proof of cause. Building is measured per existing home so big and small seats compare fairly.</p>`;
+}
+
+// ================= Policy lab: retrieval + hypotheses + memo =================
+let KB = __KB__;
+let KBI = Object.fromEntries(KB.map(k=>[k.id,k]));
+const STOP = new Set("the a an of and or to in on for with by is are was were be as at from that this it its their than into about over under per not no".split(" "));
+const tok = s => (s||"").toLowerCase().replace(/[^a-z0-9%\s-]/g," ").split(/\s+/).filter(w=>w.length>1&&!STOP.has(w));
+function buildBM(){ return (()=>{ const docs=KB.map(k=>tok(k.title+" "+k.tags.join(" ")+" "+k.tags.join(" ")+" "+k.text)); const N=docs.length, avg=docs.reduce((s,d)=>s+d.length,0)/N, df={};
+  docs.forEach(d=>new Set(d).forEach(w=>df[w]=(df[w]||0)+1));
+  return q=>{ const qt=tok(q); return docs.map((d,i)=>{ let s=0; const tf={}; d.forEach(w=>tf[w]=(tf[w]||0)+1);
+    qt.forEach(w=>{ if(!tf[w])return; const idf=Math.log(1+(N-df[w]+.5)/(df[w]+.5)); s+=idf*tf[w]*2.2/(tf[w]+1.2*(.25+.75*d.length/avg)); }); return {id:KB[i].id,s}; }).filter(x=>x.s>0).sort((a,b)=>b.s-a.s); }; })(); }
+let BM = buildBM();
+const GB_BOROUGHS = new Set(["Barnet","Bexley","Bromley","Croydon","Enfield","Harrow","Havering","Hillingdon","Hounslow","Kingston upon Thames","Redbridge","Sutton"]);
+function boroughKB(b){ return KB.find(k=>k.title==="Borough profile: "+b); }
+const kref = id => `<a class="kref" href="#ev-${id}" data-k="${id}">${id}</a>`;
+
+function hypotheses(r){
+  const H=[]; const bpk=r.homes/Math.max(r.wtbGap,1)*1000; const P=r.bpkP;
+  const est = r.vEst ? " (resident concern estimated)" : "";
+  const conf = n => n>=3?"strong":n==2?"moderate":"tentative";
+  if(r.owned>=58 && P<0.4){ const n=1+(r.Vt===0)+(r.outright>=30)-(r.vEst?1:0);
+    H.push({t:"Homeowner resistance is holding supply back", c:conf(n), s:3+n,
+      p:"A seat of mostly owners with little local concern about housing builds very little relative to the people trying to move in. The planning politics likely favour saying no.",
+      ev:`${Math.round(r.owned)}% owner-occupied · ${Math.round(r.outright)}% owned outright · ${bpk.toFixed(1)} homes built per 1,000 unserved home-seekers · ${pc1(r.V)} concerned${est}`,
+      test:"Borough refusal rate and appeal outcomes; compare with similar-PTAL neighbourhoods that build more.", k:["K12","K04","K06","K08"].concat(GB_BOROUGHS.has(r.borough)?["K02"]:[])}); }
+  const Bd=(DATA.boroughs||{})[r.borough]||{};
+  const stuck=r.approvedNS+r.lapsed, built7=Math.max(r.completed7||0,1);
+  if(stuck>0.8*built7 && stuck>1000){ const n=1+(r.lapsed>300)+(r.Mt>=1);
+    H.push({t:"Permissions are granted but not built", c:conf(n), s:3+n,
+      p:"Plenty has been approved here, but a large share is sitting unstarted or has lapsed. The bottleneck is delivery (viability, finance, building-safety gateways), not planning consent.",
+      ev:`${fmt(r.approvedNS)} homes approved not started · ${fmt(r.lapsed)} lapsed · vs ${fmt(r.completed7)} completed since 2019`,
+      test:"Site-by-site: owner, reason stalled, whether the scheme qualifies for the 20% time-limited route or CIL relief.", k:["K04","K05","K10"]}); }
+  if(Bd.apprRate!=null && Bd.apprRate<75 && r.refused>300){ H.push({t:"The council says no more often than most", c:Bd.apprRate<70?"moderate":"tentative", s:3,
+      p:`${r.borough} approves a lower share of major housing schemes than most of London, and a meaningful number of homes here were refused. This is an approval problem, where call-in powers and the presumption bite.`,
+      ev:`${r.borough} major residential approval rate since 2019: ${Math.round(Bd.apprRate)}% · ${fmt(r.refused)} homes refused here since 2019 · Delivery Test ${Math.round(Bd.hdt*100)}% (${Bd.hdtCons})`,
+      test:"Refusal reasons and appeal success rates for refused schemes.", k:["K04","K06"]}); }
+  if(r.bf>3000 && r.gap>150 && r.bf>5*r.gap){ H.push({t:"Brownfield land could close much of the gap", c:"moderate", s:2,
+      p:"The brownfield register lists room for many more homes here than are being built. Directing effort to these sites avoids Green Belt fights.",
+      ev:`brownfield capacity ${fmt(r.bf)} homes · missing ${fmt(r.gap)} a year`, test:"Which sites lack permission, and who owns them (public land first).", k:["K01","K04","K14"]}); }
+  if(r.regPer100<75 && r.privRent>=30){ H.push({t:"Many adults here can't vote on it", c:r.regPer100<72?"strong":"moderate", s:2+(r.marginPct<10),
+      p:"Registered voters are well below the adult population, and private renters are a large share. The people most affected by shortages are the least represented at elections.",
+      ev:`${r.regPer100.toFixed(0)} registered per 100 adults · ${Math.round(r.privRent)}% private renters · ${Math.round(r.movedIn)}% moved in within a year`,
+      test:"Ward-level register vs population; renter registration drive response rates.", k:["K08","K12"]}); }
+  if(r.Mt===2 && P<0.4 && (r.hpg5<3 || r.owned<50)){ const n=1+(r.hpg5<0)+(r.Vt>=1);
+    H.push({t:"High demand, but schemes aren't getting built", c:conf(n), s:3+n,
+      p:"Demand is high and residents are not especially opposed, yet completions are low and prices have stalled. That points to viability and delivery (costs, building-safety gateways, sales) more than planning refusals.",
+      ev:`${fmt(r.wtbGap)} unserved home-seekers (${ordinal(Math.round(r.Mp*75))} of 75 per resident) · 5-yr price change ${r.hpg5>0?'+':''}${r.hpg5}% · ${fmt(r.homes)} completions`,
+      test:"Datahub: homes approved but not started, and lapsed permissions, since 2019.", k:["K05","K04","K07"]}); }
+  if(r.Vt===2 && r.Mt>=1 && P<0.5){ H.push({t:"Political will exists; delivery capacity is the gap", c:r.vEst?"tentative":"moderate", s:4,
+      p:"Residents already see housing as a problem and demand is there. Persuading the MP adds little. The ask is delivery: council capacity, stalled permissions, public land.",
+      ev:`${pc1(r.V)} concerned${est} · demand ${ordinal(Math.round(r.Mp*75))} of 75 · delivery ${ordinal(Math.round((1-P)*75))} lowest of 75`,
+      test:"Datahub pipeline: permissions outstanding vs completions; council land holdings.", k:["K04","K06","K13"]}); }
+  if(P>0.8){ H.push({t:"Supply is concentrated here, not where demand is", c:r.Mt===0?"strong":"moderate", s:3,
+      p:"This seat builds far more per unserved home-seeker than most of London. That helps the headline numbers but can strain local infrastructure, while higher-demand areas elsewhere build little.",
+      ev:`${bpk.toFixed(0)} homes built per 1,000 unserved home-seekers (top fifth of London)`,
+      test:"Infrastructure capacity (schools, GP, transport) and absorption rates of recent schemes.", k:["K07","K10","K02","K12"]}); }
+  if(r.Mt===0 && r.Vt===2){ H.push({t:"The need is local affordability, not outside demand", c:r.vEst?"tentative":"moderate", s:3,
+      p:"Residents are worried but few outsiders are competing for homes here. Market-rate permissions are unlikely to help; subsidised social rent and bringing empty homes back into use are.",
+      ev:`${pc1(r.V)} concerned${est} · demand ${ordinal(Math.round(r.Mp*75))} of 75 · social rent ${Math.round(r.social)}%`,
+      test:"Housing register length and temporary accommodation numbers for the borough.", k:["K04","K11","K01"]}); }
+  if(r.social>=33 && r.Vt>=1){ H.push({t:"Need centres on social housing and estate renewal", c:r.vEst?"tentative":"moderate", s:3,
+      p:"A large social-rented population with real concern about housing. The most direct levers are grant-funded social rent and estate regeneration or infill with resident consent, not market-rate permissions alone.",
+      ev:`${Math.round(r.social)}% social rent · ${pc1(r.V)} concerned${est} · ${fmt(r.homes)} completions`,
+      test:"Borough housing register and temporary accommodation; estate regeneration pipeline in Datahub.", k:["K04","K01","K13"]}); }
+  if(r.privRent>=30 && r.marginPct<15 && !(r.regPer100<75)){ H.push({t:"Under-registered renters could decide this seat", c:r.marginPct<5?"strong":"moderate", s:2+(r.marginPct<5),
+      p:"Private renters are a large share here and are far less likely to be on the register than owners. The winning margin is small enough that registering them could change the MP's calculation.",
+      ev:`${Math.round(r.privRent)}% private renters · 2024 margin ${r.majority<1000?fmt(r.majority)+' votes':r.marginPct.toFixed(1)+' pts'} · registration 65% renters vs 95% outright owners (GB)`,
+      test:"Borough electoral register vs mid-year adult population.", k:["K08","K09"]}); }
+  if(r.marginPct<5 && !H.some(h=>h.t.startsWith("Under-registered"))){ H.push({t:"The MP is highly exposed to any organised bloc", c:"strong", s:2,
+      p:"With a margin this small, visible pro-housing constituents matter more here than almost anywhere in London.",
+      ev:`2024 margin ${r.majority<1000?fmt(r.majority)+' votes':r.marginPct.toFixed(1)+' pts'} (${r.won} over ${r.second})`, test:"Current polling for the seat.", k:["K09"]}); }
+  if(GB_BOROUGHS.has(r.borough) && r.Mt>=1){ H.push({t:"Green Belt near stations could be in play", c:"tentative", s:1,
+      p:`${r.borough} contains Green Belt land. The draft London Plan would allow release within about 15 minutes' walk of well-connected stations, which is where demand here should be tested first.`,
+      ev:`demand ${ordinal(Math.round(r.Mp*75))} of 75 · ${r.borough}`, test:"Map Green Belt parcels within 1,200m of stations against WhereToBuild neighbourhoods.", k:["K02"]}); }
+  if(!H.length) H.push({t:"No strong signal from current data", c:"tentative", s:0, p:"This seat sits near the London middle on demand, concern and delivery.", ev:`${TYPES[r.type].label}`, test:"Check the full polling extract when it arrives.", k:["K12","K14"]});
+  return H.sort((a,b)=>b.s-a.s);
+}
+
+function similarSeats(r,n=3){ const f=x=>[x.Mp,x.Vp,x.owned/100,Math.min(1,x.marginPct/40),x.bpkP];
+  const a=f(r); return ROWS.filter(x=>x.code!==r.code).map(x=>({x,d:f(x).reduce((s,v,i)=>s+(v-a[i])**2,0)})).sort((p,q)=>p.d-q.d).slice(0,n).map(o=>o.x); }
+
+function retrieve(r,H){
+  const ids=new Set(); const b=boroughKB(r.borough); if(b) ids.add(b.id);
+  H.forEach(h=>h.k.forEach(k=>ids.add(k)));
+  const q=[r.borough,r.name,TYPES[r.type].label,...H.map(h=>h.t+" "+h.p)].join(" ");
+  BM(q).slice(0,14).forEach(x=>{ if(ids.size<11 && !(KBI[x.id]&&KBI[x.id].title.startsWith("Borough profile"))) ids.add(x.id); });
+  ["K14","K05","K02"].forEach(k=>{ if(ids.size<12) ids.add(k); });
+  return [...ids].map(id=>KBI[id]).filter(Boolean);
+}
+function seatFacts(r){ return {seat:r.name, borough_council:r.borough, mp:r.mp?`${r.mp} (${r.mpParty})`:(r.mpNote||"vacant"),
+  ge2024:`${r.won} won over ${r.second} by ${fmt(r.majority)} votes (${r.marginPct.toFixed(1)} pts)`, area_type:TYPES[r.type].label,
+  unserved_home_seekers_WhereToBuild:r.wtbGap, per_1000_residents:r.wtbPer1k, demand_rank_of_75:Math.round(r.Mp*75),
+  resident_housing_concern_pct:+(r.V*100).toFixed(1), concern_is_estimated:r.vEst, concern_rank_of_75:Math.round(r.Vp*75),
+  homes_completed_per_year_Datahub_2019_20_to_2024_25:r.homes, homes_completed_since_2019:r.completed7, existing_dwellings_2025:r.dwellings, homes_built_per_1000_existing_per_year:+(r.homes/r.dwellings*1000).toFixed(1),
+  model_should_build_per_year:Math.round(r.target), model_missing_homes_per_year:Math.round(r.gap), model_calibrated_to_london_total:state.total,
+  pipeline_since_2019:{approved_not_started:r.approvedNS,under_construction:r.startedNC,lapsed:r.lapsed,refused:r.refused},
+  brownfield_capacity_homes:r.bf, ptal_mean_access_index:r.ptal, median_price_2026:r.medPrice,
+  registered_voters_per_100_adults:r.regPer100, pct_moved_in_last_year:r.movedIn, pct_overcrowded:r.overcrowd, pct_underoccupied_2plus_bedrooms:r.underocc,
+  top_missing_neighbourhoods:(r.tops||[]).map(x=>`${x.n}: ${x.miss} missing/yr, ${x.built} built/yr, brownfield ${x.bf}, PTAL ${x.ptal}`),
+  borough_context:(()=>{const b=(DATA.boroughs||{})[r.borough]; return b?{housing_delivery_test_2025_pct:Math.round(b.hdt*100),hdt_consequence:b.hdtCons,major_scheme_approval_rate_since_2019_pct:b.apprRate,council_control_2026:b.control,pct_second_homes:b.pctSecond,pct_long_term_empty:b.pctEmpty}:null})(),
+  tenure_pct:{owned:r.owned,owned_outright:r.outright,private_rent:r.privRent,social_rent:r.social},
+  price_to_earnings:r.afford, house_price_change_5y_pct:r.hpg5, campaign_priority_0_100:Math.round(r.prio), priority_rank:r.rank}; }
+
+function memoPrompt(r,H,docs,sims){
+  return `You are a housing policy analyst writing a short, rigorous policy memo about one London parliamentary constituency for campaigners and policymakers.
+
+RULES
+- Use ONLY the seat data, similar seats and LIBRARY entries below. Do not add facts, numbers, schemes, dates or named people that are not given here. If something useful is missing, say what data would settle it.
+- Cite library entries inline as [K01] etc. every time you use one. Seat numbers come from SEAT DATA; do not cite them.
+- Treat the hypotheses as starting points: support, qualify or reject each one using the data. Association is not causation.
+- Flag data limits where they matter: completions are Planning London Datahub records, which miss some homes in a few boroughs [K10]; resident concern may be estimated; the missing-homes figure comes from the model in [K14] and depends on the London-wide target chosen.
+- Prefer levers that already exist over new ones. Say who holds each lever: MP, borough council, Mayor/GLA, or government.
+- Plain English, UK spelling, no filler. About 600-800 words.
+
+FORMAT (Markdown)
+# Policy memo: ${r.name}
+## Bottom line
+(2-3 sentences)
+## What the data shows
+(4-6 bullets with the key numbers)
+## Diagnosis
+(each hypothesis: verdict - supported / partly / not supported - and why)
+## Policy context and history
+(what has already been tried or is changing here and London-wide, from the library only)
+## Options
+(3-5 options: the lever, who holds it, expected effect, main risk)
+## Outlook and implications
+(what happens under the draft London Plan and current trends; second-order effects)
+## Campaign ask
+(one specific ask of the MP and one of the council)
+## Data gaps
+(bullets)
+
+SEAT DATA
+${JSON.stringify(seatFacts(r),null,1)}
+
+HYPOTHESES FROM THE TOOL
+${H.map((h,i)=>`${i+1}. ${h.t} [confidence: ${h.c}] - ${h.p} Evidence: ${h.ev}. Test: ${h.test}`).join("\n")}
+
+SIMILAR SEATS (for comparison)
+${sims.map(s=>`- ${s.name} (${s.borough}): ${TYPES[s.type].label}; ${fmt(s.wtbGap)} unserved; ${Math.round(s.V*100)}% concerned; ${fmt(s.homes)} completions; ${Math.round(s.owned)}% owned; margin ${s.marginPct.toFixed(1)} pts`).join("\n")}
+
+LIBRARY
+${docs.map(d=>`[${d.id}] ${d.title}: ${d.text}`).join("\n\n")}
+`;
+}
+
+function md(s){ const esc=t=>t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const inline=t=>esc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\[(K\d\d)\]/g,(m,id)=>KBI[id]?kref(id):m).replace(/\[(K\d\d)(?:,\s*(K\d\d))+\]/g,m=>m);
+  let out="",inList=false; s.split("\n").forEach(line=>{ const L=line.trimEnd();
+    if(/^\s*[-*] /.test(L)){ if(!inList){out+="<ul>";inList=true;} out+="<li>"+inline(L.replace(/^\s*[-*] /,""))+"</li>"; return; }
+    if(inList){out+="</ul>";inList=false;}
+    const h=L.match(/^(#{1,3}) (.*)/); if(h){ out+=`<h${h[1].length}>${inline(h[2])}</h${h[1].length}>`; return; }
+    if(L.trim()) out+="<p>"+inline(L.replace(/\[(K\d\d)((?:,\s*K\d\d)+)\]/g,(m,a,b)=>"["+[a,...b.split(",").map(x=>x.trim()).filter(Boolean)].join("] [")+"]"))+"</p>"; });
+  if(inList) out+="</ul>"; return out; }
+
+let SAMPLE=null, DL=null, memoText="", memoCtl=null, labCtx=null;
+function drawLab(){
+  const r=ROWS.find(x=>x.code===state.sel); if(!r) return;
+  const sameSeat = labCtx && labCtx.r.code===r.code;
+  document.getElementById('labseat').textContent=r.name;
+  const H=hypotheses(r), docs=retrieve(r,H), sims=similarSeats(r);
+  labCtx={r,H,docs,sims};
+  document.getElementById('hyps').innerHTML=H.map(h=>`<div class="hyp"><span class="conf ${h.c}">${CONF_LABEL[h.c]}</span><h3>${h.t}</h3><p>${h.p}</p><div class="ev">${h.ev}</div><div class="fix"><b>What would help:</b> ${fixFor(h)[0]}</div><div class="whoa"><b>Who can act:</b> ${fixFor(h)[1]}</div><div class="lv"><b>To confirm:</b> ${h.test} · <b>Background:</b> ${h.k.map(kref).join(" ")}</div></div>`).join("");
+  document.getElementById('evidn').textContent=docs.length;
+  document.getElementById('evidlist').innerHTML=docs.map(d=>`<li id="ev-${d.id}"><b>[${d.id}] ${d.title}.</b> ${d.text} <span class="note">Source: ${d.src.map(s=>s.url.startsWith('#')?s.name:`<a href="${s.url}" target="_blank" rel="noopener">${s.name}</a>`).join("; ")}</span></li>`).join("");
+  document.querySelectorAll('#lab .kref').forEach(a=>a.onclick=openRef);
+  if(sameSeat && (memoCtl || memoText)) return;
+  if(memoCtl) memoCtl.abort();
+  memoText=""; const m=document.getElementById('memo'); m.hidden=true; m.innerHTML="";
+  document.getElementById('askform').hidden=true; document.getElementById('answer').innerHTML="";
+  document.getElementById('memostatus').textContent = SAMPLE===null&&window.__sampleChecked ? "Memo writing works when this page is opened in Claude." : "Writes a 2–3 page PDF from this seat's data, similar seats and the policy library, and saves it here for your team.";
+  document.querySelectorAll('#lab .kref').forEach(a=>a.onclick=openRef);
+  document.getElementById('memobtn').textContent='Write a policy memo';
+  if(typeof showSavedMemo==='function') showSavedMemo();
+}
+function openRef(e){ const id=e.currentTarget.dataset.k; const d=document.getElementById('evid'); d.open=true; }
+const errCopy = c => ({not_granted:"Memo generation needs your permission to use Claude.",rate_limited:"Too many requests just now. Try again in a minute.",session_expired:"Sign in to Claude again, then retry.",prompt_too_large:"Too much context for one memo.",refused:"Claude declined this request.",sampling_disabled:"Claude isn't available for this account.",upstream_error:"The connection dropped. Try again."}[c]||"Something went wrong. Try again.");
+// ---------- memo → PDF ----------
+const PDF_MAP={"≈":"~","→":"->","←":"<-","≥":">=","≤":"<=","×":"x","−":"-","‑":"-"," ":" ","✓":"v","…":"...","‐":"-","′":"'","″":'"'};
+const pdfSafe=s=>(s||"").replace(/[≈→←≥≤×−‑ ✓…‐′″]/g,c=>PDF_MAP[c]).replace(/[^\x00-\xFF‘’“”–—•€™£]/g,"");
+function bottomLine(text){ const m=text.split(/\n## /).find(s=>/^Bottom line/i.test(s)); const body=(m||text.replace(/^#.*\n/,"")).replace(/^Bottom line\s*\n/i,"").replace(/\*\*/g,"").split(/\n## /)[0].trim();
+  const sents=body.replace(/\s+/g," ").match(/[^.!?]+[.!?]+/g)||[body]; return sents.slice(0,2).join(" ").trim(); }
+function buildMemoPdf(r,text,docs,meta){
+  const { jsPDF } = window.jspdf; const doc=new jsPDF({unit:"mm",format:"a4"}); const W=210,H=297,M=18,CW=W-2*M; let y=0;
+  const ACC=[47,63,143], INK=[21,24,29], MUTED=[110,116,126];
+  const header=()=>{ doc.setFillColor(...ACC); doc.rect(0,0,W,4,"F"); };
+  const footer=()=>{ const n=doc.getNumberOfPages(); for(let i=1;i<=n;i++){ doc.setPage(i); doc.setFont("helvetica","normal"); doc.setFontSize(8); doc.setTextColor(...MUTED);
+      doc.text(pdfSafe(`Policy memo · ${r.name} · data version ${meta.version}`),M,H-10); doc.text(`${i} / ${n}`,W-M,H-10,{align:"right"}); } };
+  const need=h=>{ if(y+h>H-18){ doc.addPage(); header(); y=M; } };
+  const para=(s,{size=10,style="normal",color=INK,indent=0,gap=1.6,lh=0.42}={})=>{ doc.setFont("helvetica",style); doc.setFontSize(size); doc.setTextColor(...color);
+    const lines=doc.splitTextToSize(pdfSafe(s),CW-indent); lines.forEach(l=>{ need(size*lh); doc.text(l,M+indent,y); y+=size*lh; }); y+=gap; };
+  header(); y=M+4;
+  doc.setFont("helvetica","bold"); doc.setFontSize(8.5); doc.setTextColor(...ACC); doc.text("POLICY MEMO · LONDON HOUSING",M,y); y+=7;
+  para(r.name,{size:20,style:"bold",lh:0.45,gap:1});
+  para(`${r.borough} · ${r.mp?`${r.mp} (${r.mpParty})`:"No sitting MP"} · 2024 margin ${r.majority<1000?fmt(r.majority)+" votes":r.marginPct.toFixed(1)+" pts"}`,{size:9.5,color:MUTED,gap:0.5});
+  para(`Generated ${new Date(meta.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}${meta.by?` by ${meta.by}`:""} · model target ${fmt(state.total)} homes a year London-wide`,{size:8.5,color:MUTED,gap:4});
+  // key figures strip
+  const kf=[["Homes built a year",fmt(r.homes)],["Model: should build",fmt(r.target)],["Missing a year",fmt(r.gap)],["Residents worried",Math.round(r.V*100)+"%"+(r.vEst?" (est.)":"")]];
+  const bw=CW/4; need(18); doc.setDrawColor(221,224,227); kf.forEach((k,i)=>{ const x=M+i*bw; doc.setFillColor(242,243,241); doc.rect(x+0.5,y,bw-1,15,"F");
+    doc.setFont("helvetica","normal"); doc.setFontSize(7.5); doc.setTextColor(...MUTED); doc.text(pdfSafe(k[0]),x+3,y+5); doc.setFont("helvetica","bold"); doc.setFontSize(13); doc.setTextColor(...INK); doc.text(pdfSafe(k[1]),x+3,y+12); }); y+=21;
+  text.split("\n").forEach(line=>{ const L=line.replace(/\*\*(.+?)\*\*/g,"$1").trimEnd(); if(!L.trim()){ return; }
+    if(/^# /.test(L)) return;
+    if(/^## /.test(L)){ y+=2; need(12); para(L.slice(3),{size:12.5,style:"bold",color:ACC,gap:1.2}); return; }
+    if(/^### /.test(L)){ para(L.slice(4),{size:10.5,style:"bold",gap:1}); return; }
+    if(/^\s*[-*] /.test(L)){ const s=L.replace(/^\s*[-*] /,""); doc.setFont("helvetica","normal"); doc.setFontSize(10); const lines=doc.splitTextToSize(pdfSafe(s),CW-6);
+      lines.forEach((l,i)=>{ need(4.3); if(i===0){ doc.setTextColor(...ACC); doc.text("•",M+1,y); } doc.setTextColor(...INK); doc.text(l,M+6,y); y+=4.3; }); y+=1.2; return; }
+    para(L,{gap:2}); });
+  y+=3; need(14); para("Sources consulted",{size:11,style:"bold",color:ACC,gap:1});
+  docs.forEach(d=>para(`[${d.id}] ${d.title}. ${d.src.map(s=>s.url.startsWith('#')?s.name:`${s.name} ${s.url}`).join("; ")}`,{size:7.8,color:MUTED,gap:1}));
+  para("Data: Planning London Datahub; WhereToBuild (Warwick, event use); Prime Radiant MRP via Forest; House of Commons Library GE2024; Census 2021; MHCLG Housing Delivery Test 2025. Associations, not proof of cause.",{size:7.5,color:MUTED,gap:0});
+  footer(); return doc.output("blob"); }
+
+let ASSETS=null, lastPdf=null;
+const memoFile=r=>`policy-memo-${r.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.pdf`;
+function memoCard(r,text,{url=null,meta=null,stale=false,saved=false}={}){ const m=document.getElementById('memo'); m.hidden=false;
+  m.innerHTML=`<div class="memocard"><div class="mc-icon" aria-hidden="true">PDF</div><div class="mc-body"><div class="eyebrow">Policy memo · ${r.name}</div>
+   <p class="mc-bl">${bottomLine(text).replace(/</g,'&lt;')}</p>
+   <div class="note">${meta?meta:""}${stale?' · <span class="flag">data has changed since; write a new one for current figures</span>':""}</div>
+   <div class="mc-actions">${url?`<a class="btn primary" href="${url}" target="_blank" rel="noopener">Open PDF</a>`:""}<button type="button" class="btn" id="mcdl">Download PDF</button><button type="button" class="btn" id="mccopy">Copy text</button></div></div></div>`;
+  document.getElementById('mcdl').onclick=()=>downloadMemo(r,text); document.getElementById('mccopy').onclick=()=>copyMemo(text);
+  document.getElementById('askform').hidden=!SAMPLE; }
+async function downloadMemo(r,text){ const st=document.getElementById('memostatus');
+  try{ const blob=(lastPdf&&lastPdf.code===r.code&&lastPdf.text===text)?lastPdf.blob:buildMemoPdf(r,text,labCtx.docs,{version:(BK.meta&&BK.meta.version)||DATA.version,createdAt:new Date().toISOString()});
+    if(DL){ await DL.save({filename:memoFile(r),data:blob}); } else { const s=BK.memos[r.code]; if(s&&s.pdfId) window.open("/_blob/"+s.pdfId,"_blank"); else st.textContent="Download isn't available in this view."; } }
+  catch(e){ if(e&&e.code!=="cancelled") st.textContent="The download didn't complete."; } }
+async function copyMemo(text){ const st=document.getElementById('memostatus'); try{ await navigator.clipboard.writeText(text); st.textContent="Memo text copied."; }catch{ st.textContent="Copy isn't available here; use Download PDF."; } }
+function drawRecent(){ const el=document.getElementById('recentmemos'); if(!el) return; const L=Object.values(BK.memos||{}).filter(m=>m.pdfId).sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")).slice(0,8);
+  el.hidden=!L.length; if(!L.length) return;
+  el.innerHTML=`<div class="eyebrow">Recent memos (saved to this tool)</div><ul>${L.map(m=>`<li><a href="/_blob/${m.pdfId}" target="_blank" rel="noopener">${(m.name||m.code).replace(/</g,'&lt;')}</a><span class="note"> · ${new Date(m.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</span> <button type="button" class="linkbtn" data-code="${m.code}">View seat</button></li>`).join("")}</ul>`;
+  el.querySelectorAll('.linkbtn').forEach(b=>b.onclick=()=>select(b.dataset.code,false)); }
+
+async function genMemo(){
+  if(!SAMPLE||!labCtx) return; const {r,H,docs,sims}=labCtx; const st=document.getElementById('memostatus'), b=document.getElementById('memobtn'), stop=document.getElementById('stopbtn'), m=document.getElementById('memo');
+  memoCtl=new AbortController(); b.disabled=true; stop.hidden=false; m.hidden=false; m.innerHTML='<div class="memoprog"><span class="spin" aria-hidden="true"></span><span id="progtxt">Reading the seat data and policy library…</span></div>'; st.textContent="";
+  try{ const res=await SAMPLE(memoPrompt(r,H,docs,sims),{signal:memoCtl.signal,modelTier:"default",onText:({text})=>{ const w=text.split(/\s+/).length; const p=document.getElementById('progtxt'); if(p) p.textContent=`Drafting the memo… ${w} words`; }});
+    memoText=res.text; const p=document.getElementById('progtxt'); if(p) p.textContent="Building the PDF…";
+    let who=""; if(BK.user&&BK.uid){ try{ const ps=await BK.user.profiles([BK.uid]); who=(ps[BK.uid]&&ps[BK.uid].name)||""; }catch{} }
+    const meta={version:(BK.meta&&BK.meta.version)||DATA.version,createdAt:new Date().toISOString(),by:who};
+    let blob=null; try{ blob=buildMemoPdf(r,res.text,docs,meta); lastPdf={code:r.code,text:res.text,blob}; }catch(e){ blob=null; }
+    let url=null, pdfId=null;
+    if(blob&&ASSETS){ try{ const up=await ASSETS.upload(blob,{type:"application/pdf"}); url=up.url; pdfId=up.id; }catch(e){ if(e&&e.code==="store_unavailable"){ try{ const up=await ASSETS.upload(blob,{type:"application/pdf"}); url=up.url; pdfId=up.id; }catch{} } } }
+    const saved = res.truncated ? false : await saveMemo(r,res.text,docs,H,res.modelTierApplied,pdfId);
+    memoCard(r,res.text,{url,meta:`Written just now${saved?" and saved for your team":BK.db?" (not saved: view-only access)":""}${res.truncated?" · cut short, write it again for the full version":""}`});
+    if(!blob) st.textContent="The PDF couldn't be built in this view; the text is still available to copy.";
+  }catch(e){ if(e.code==="cancelled"){ m.hidden=true; st.textContent="Stopped."; } else { if(e.text){ memoText=e.text; memoCard(r,e.text,{meta:"Interrupted before finishing"}); } else m.hidden=true; st.textContent=errCopy(e.code); }
+    if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(e.code)) b.hidden=true;
+  }finally{ b.disabled=false; stop.hidden=true; b.textContent="Write a new memo"; memoCtl=null; }
+}
+
+document.getElementById('memobtn').onclick=genMemo;
+document.getElementById('stopbtn').onclick=()=>memoCtl&&memoCtl.abort();
+document.getElementById('askform').addEventListener('submit',async e=>{ e.preventDefault(); if(!SAMPLE||!labCtx) return; const q=document.getElementById('askin').value.trim(); if(!q) return;
+  const a=document.getElementById('answer'); a.innerHTML='<p class="thinking">Thinking…</p>'; const {r,H,docs,sims}=labCtx;
+  const prompt=memoPrompt(r,H,docs,sims).split("FORMAT (Markdown)")[0]+`\nSEAT DATA\n${JSON.stringify(seatFacts(r))}\n\nLIBRARY\n${docs.map(d=>`[${d.id}] ${d.title}: ${d.text}`).join("\n\n")}\n\nEARLIER MEMO\n${memoText.slice(0,6000)}\n\nQUESTION\n${q}\n\nAnswer in under 200 words, citing library entries as [K01].`;
+  try{ const res=await SAMPLE(prompt,{cache:false,modelTier:"default",onText:({text})=>{a.innerHTML=md(text);}}); a.innerHTML=md(res.text); a.querySelectorAll('.kref').forEach(x=>x.onclick=openRef); }
+  catch(err){ a.innerHTML = err.text?md(err.text):`<p class="note">${errCopy(err.code)}</p>`; } });
+(async()=>{ try{ SAMPLE = window.claude ? await claude.use("sample") : null; }catch{ SAMPLE=null; }
+  try{ DL = window.claude ? await claude.use("downloads") : null; }catch{ DL=null; }
+  try{ ASSETS = window.claude ? await claude.use("assets") : null; }catch{ ASSETS=null; }
+  window.__sampleChecked=true; if(!SAMPLE){ document.getElementById('memobtn').hidden=true; document.getElementById('memostatus').textContent="Memo generation works when this page is opened in Claude."; } })();
+
+// ================= Back end: shared database (internal version), snapshot fallback (public version) =================
+const SEAT_FIELDS=["name","borough","boroughs","wtbGap","wtbPer1k","wtbPerKm2","wtbFlag","afford","affEst","outright","owned","social","privRent","homes","pop","hpg5","V","vEst","won","second","majority","marginPct","turnout","mp","mpParty","mpNote","q","r","adults","households","dwellings","overcrowd","movedIn","underocc","completed7","approvedNS","startedNC","lapsed","refused","pipeline","bf","ptal","medPrice","regPer100","raw","tops"];
+const NUM_FIELDS=new Set(["wtbGap","wtbPer1k","wtbPerKm2","wtbFlag","afford","outright","owned","social","privRent","homes","pop","hpg5","V","majority","marginPct","turnout","q","r","adults","households","dwellings","overcrowd","movedIn","underocc","completed7","approvedNS","startedNC","lapsed","refused","pipeline","bf","ptal","medPrice","regPer100","raw"]);
+const BK={db:null,user:null,uid:null,canWrite:null,canAdmin:false,mode:"snapshot",meta:null,counts:{seats:0,kb:0,memos:0,boroughs:0},memos:{},unsubs:[],readOnly:false};
+function setStatus(){ const el=document.getElementById('bkstatus'); if(!el) return; const v=(BK.meta&&BK.meta.version)||DATA.version;
+  const txt={snapshot:`Snapshot data · version ${v}`,live:`Live database · version ${v}${BK.meta&&BK.meta.updatedAt?' · updated '+new Date(BK.meta.updatedAt).toLocaleDateString('en-GB'):''}`,empty:`Database connected but empty · showing snapshot ${v}`,error:`Database unavailable · showing snapshot ${v}`}[BK.mode];
+  el.textContent=txt; el.dataset.mode=BK.mode; }
+function refreshAll(){ compute(); drawMap(); drawLegend(); drawCard(); drawTable(); drawScatter(); drawGame(); drawLab(); drawStart(); }
+function cleanSeat(d){ const o={}; SEAT_FIELDS.forEach(f=>{ if(d[f]!==undefined) o[f]=d[f]; }); return o; }
+let _refreshT=null; function scheduleRefresh(){ clearTimeout(_refreshT); _refreshT=setTimeout(refreshAll,120); }
+async function initBackend(){
+  let db=null; try{ db = window.claude ? await claude.use("db") : null; }catch{ db=null; }
+  if(!db){ BK.mode="snapshot"; setStatus(); return; }
+  BK.db=db;
+  try{ BK.user = await claude.use("user"); }catch{ BK.user=null; }
+  if(BK.user){ try{ BK.uid=await BK.user.id(); }catch{} try{ BK.canWrite=await BK.user.can("data.write"); }catch{} try{ BK.canAdmin=!!(await BK.user.canEdit()); }catch{} }
+  const fail=e=>{ if(e&&e.code==="revoked"){ BK.mode="error"; setStatus(); } };
+  BK.unsubs.push(db.doc("meta/config").onSnapshot(s=>{ if(s.exists){ BK.meta={...s.data()}; if(BK.meta.target) DATA.target=BK.meta.target; if(BK.meta.vModel) DATA.vModel=BK.meta.vModel; if(BK.meta.wtbTotal) DATA.wtbTotal=BK.meta.wtbTotal; drawMethod(); } setStatus(); drawAdmin(); },fail));
+  BK.unsubs.push(db.collection("seats").onSnapshot(q=>{ BK.counts.seats=q.size;
+    if(q.empty){ BK.mode="empty"; setStatus(); drawAdmin(); return; }
+    q.docs.forEach(d=>{ const r=ROWS.find(x=>x.code===d.id); const body=cleanSeat(d.data()||{}); if(r) Object.assign(r,body); else if(body.name) ROWS.push({code:d.id,...body}); });
+    BK.mode="live"; setStatus(); scheduleRefresh(); drawAdmin(); },e=>{ BK.mode="error"; setStatus(); fail(e); }));
+  BK.unsubs.push(db.collection("kb").onSnapshot(q=>{ BK.counts.kb=q.size; if(q.empty){ drawAdmin(); return; }
+    const docs=q.docs.map(d=>({...d.data(),id:d.id})).filter(k=>k.title&&k.text).sort((a,b)=>a.id.localeCompare(b.id));
+    KB=docs; KBI=Object.fromEntries(KB.map(k=>[k.id,k])); BM=buildBM(); drawLab(); drawAdmin(); },fail));
+  BK.unsubs.push(db.collection("boroughs").onSnapshot(q=>{ BK.counts.boroughs=q.size; if(!q.empty){ const o={}; q.docs.forEach(d=>{ const x={...d.data()}; if(x.name) o[x.name]=x; }); DATA.boroughs=o; scheduleRefresh(); } drawAdmin(); },fail));
+  BK.unsubs.push(db.collection("memos").onSnapshot(q=>{ BK.counts.memos=q.size; BK.memos={}; q.docs.forEach(d=>BK.memos[d.id]={...d.data()}); if(!memoCtl) showSavedMemo(); drawRecent(); drawAdmin(); },fail));
+  setStatus(); drawAdmin();
+}
+async function showSavedMemo(){ if(!labCtx) return; const r=labCtx.r; const s=BK.memos[r.code];
+  drawRecent(); if(!s||!s.text||memoCtl) return;
+  memoText=s.text; let who="a teammate"; if(s.by&&BK.user){ try{ const ps=await BK.user.profiles([s.by]); who=(ps[s.by]&&ps[s.by].name)||who; if(s.by===BK.uid) who="you"; }catch{} }
+  const cur=(BK.meta&&BK.meta.version)||DATA.version;
+  memoCard(r,s.text,{url:s.pdfId?"/_blob/"+s.pdfId:null,meta:`Saved memo · ${new Date(s.createdAt).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'})} · by ${who.replace(/</g,'&lt;')}`,stale:!!(s.dataVersion&&s.dataVersion!==cur)});
+  document.getElementById('memobtn').textContent="Write a new memo"; }
+async function saveMemo(r,text,docs,H,tier,pdfId){ if(!BK.db||BK.readOnly||BK.canWrite===false) return false;
+  const body={code:r.code,name:r.name,text:text.slice(0,200000),docIds:docs.map(d=>d.id),hypotheses:H.map(h=>h.t),dataVersion:(BK.meta&&BK.meta.version)||DATA.version,modelTier:tier||"default",createdAt:new Date().toISOString(),by:BK.uid||null,pdfId:pdfId||null};
+  try{ await BK.db.doc("memos/"+r.code).set(body); return true; }
+  catch(e){ if(e.code==="invalid_argument"){ BK.readOnly=true; } else if(e.code==="unavailable"){ await new Promise(res=>setTimeout(res,600+Math.random()*900)); try{ await BK.db.doc("memos/"+r.code).set(body); return true; }catch{} } return false; } }
+
+// ---- Admin (Editors/Owner): seed, import, status ----
+let adminBusy=false, pendingImport=null, pendingSeed=false;
+function drawAdmin(){ const p=document.getElementById('admin'); if(!p) return; p.hidden=!(BK.db&&BK.canAdmin); if(p.hidden) return;
+  const v=(BK.meta&&BK.meta.version)||"not set";
+  document.getElementById('adminstats').innerHTML=`<div class="stat"><div class="k">Seats in database</div><div class="v">${BK.counts.seats}/75</div></div><div class="stat"><div class="k">Library entries · boroughs</div><div class="v">${BK.counts.kb} · ${BK.counts.boroughs}</div></div><div class="stat"><div class="k">Saved memos</div><div class="v">${BK.counts.memos}</div></div><div class="stat"><div class="k">Data version</div><div class="v" style="font-size:15px">${v}</div></div>`;
+  document.getElementById('seedconfirm').hidden=!pendingSeed; document.getElementById('impconfirm').hidden=!pendingImport;
+  if(pendingImport) document.getElementById('impsummary').textContent=`${pendingImport.rows.length} seats, fields: ${pendingImport.fields.join(", ")}. New data version: ${pendingImport.version}.`; }
+function adminMsg(t){ document.getElementById('adminmsg').textContent=t; }
+async function writeSeq(ops,label){ let n=0; for(const [path,body,merge] of ops){ const ref=BK.db.doc(path);
+    for(let attempt=0;attempt<2;attempt++){ try{ merge? await ref.update(body) : await ref.set(body); break; }
+      catch(e){ if(e.code==="unavailable"&&attempt===0){ await new Promise(r=>setTimeout(r,500+Math.random()*800)); continue; } throw e; } }
+    n++; if(n%10===0) adminMsg(`${label}: ${n}/${ops.length}…`); } return n; }
+async function doSeed(){ if(adminBusy) return; adminBusy=true; pendingSeed=false; drawAdmin(); adminMsg("Writing seats, library and settings…");
+  try{ const ops=[]; SNAP.rows.forEach(r=>ops.push(["seats/"+r.code,cleanSeat(r)])); SNAP.kb.forEach(k=>ops.push(["kb/"+k.id,{title:k.title,tags:k.tags,text:k.text,src:k.src}])); Object.entries(SNAP.boroughs).forEach(([n,b])=>ops.push(["boroughs/"+b.lad,{name:n,...b}]));
+    ops.push(["meta/config",{version:SNAP.version,updatedAt:new Date().toISOString(),target:SNAP.target,vModel:SNAP.vModel,wtbTotal:SNAP.wtbTotal,note:"Seeded from the page's built-in snapshot"}]);
+    const n=await writeSeq(ops,"Seeding"); adminMsg(`Done: ${n} documents written.`); }
+  catch(e){ adminMsg(e.code==="quota_exceeded"?"The database is full. Delete old memos and try again.":e.code==="invalid_argument"?"You don't have permission to change shared data.":"Seeding stopped part-way. Run it again to finish."); }
+  adminBusy=false; }
+function parseImport(text){ let arr; try{ arr=JSON.parse(text); }catch{ throw new Error("That file isn't valid JSON."); }
+  if(!Array.isArray(arr)) arr = Array.isArray(arr.rows)?arr.rows:null; if(!arr) throw new Error("Expected a JSON array of seat objects, each with a \"code\" (ONS constituency code).");
+  const known=new Set(ROWS.map(r=>r.code)), fields=new Set(), rows=[];
+  arr.forEach((o,i)=>{ if(!o||typeof o!=="object") throw new Error(`Item ${i+1} isn't an object.`); if(!known.has(o.code)) throw new Error(`Item ${i+1}: "${o.code}" isn't one of the 75 London seat codes.`);
+    const body={}; Object.keys(o).forEach(k=>{ if(k==="code") return; if(!SEAT_FIELDS.includes(k)) throw new Error(`Unknown field "${k}". Allowed: ${SEAT_FIELDS.join(", ")}.`);
+      if(NUM_FIELDS.has(k)&&(typeof o[k]!=="number"||!isFinite(o[k]))) throw new Error(`Item ${i+1}: "${k}" must be a number.`); body[k]=o[k]; fields.add(k); });
+    if(Object.keys(body).length) rows.push({code:o.code,body}); });
+  if(!rows.length) throw new Error("No seat fields to update in that file.");
+  const d=new Date(), version=`${d.toISOString().slice(0,10)}.${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}`;
+  return {rows,fields:[...fields],version}; }
+async function doImport(){ if(adminBusy||!pendingImport) return; adminBusy=true; const imp=pendingImport; pendingImport=null; drawAdmin();
+  try{ const ops=imp.rows.map(x=>["seats/"+x.code,x.body,BK.counts.seats>0]); if(BK.counts.seats===0) ops.forEach(o=>{ const r=ROWS.find(z=>z.code===o[0].slice(6)); o[1]={...cleanSeat(r),...o[1]}; });
+    await writeSeq(ops,"Importing");
+    const mref=BK.db.doc("meta/config"); const note=`Imported ${imp.rows.length} seats (${imp.fields.join(", ")})`;
+    if(BK.meta) await mref.update({version:imp.version,updatedAt:new Date().toISOString(),note}); else await mref.set({version:imp.version,updatedAt:new Date().toISOString(),target:DATA.target,vModel:DATA.vModel,wtbTotal:DATA.wtbTotal,note});
+    adminMsg(`Imported ${imp.rows.length} seats. Everyone viewing now sees version ${imp.version}.`); }
+  catch(e){ adminMsg(e.code==="invalid_argument"?"You don't have permission to change shared data.":"Import stopped part-way. Re-run the same file to finish."); }
+  adminBusy=false; }
+document.getElementById('seedbtn').onclick=()=>{ pendingSeed=true; drawAdmin(); };
+document.getElementById('seedyes').onclick=doSeed; document.getElementById('seedno').onclick=()=>{ pendingSeed=false; drawAdmin(); };
+document.getElementById('impfile').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ pendingImport=parseImport(await f.text()); adminMsg(""); }catch(err){ pendingImport=null; adminMsg(err.message); } e.target.value=""; drawAdmin(); };
+document.getElementById('impyes').onclick=doImport; document.getElementById('impno').onclick=()=>{ pendingImport=null; drawAdmin(); };
+
+compute(); fillFilters(); drawLayers(); drawMap(); drawLegend(); drawGame(); drawMethod(); drawScatter(); document.getElementById('fsort').value=state.sort; drawStart();
+document.querySelectorAll('.tabs a').forEach(a=>a.addEventListener('click',()=>{ const d=document.querySelector(a.getAttribute('href')); const det=d&&d.closest('details'); if(det) det.open=true; document.querySelectorAll('.tabs a').forEach(x=>x.classList.toggle('on',x===a)); }));
+(function init(){ const r=lookup("SE15 5DQ"); select(r.code||ROWS[0].code,false); document.getElementById('pcmsg').textContent="Example postcode loaded. Try your own."; })();
+setStatus(); initBackend();
+</script>
