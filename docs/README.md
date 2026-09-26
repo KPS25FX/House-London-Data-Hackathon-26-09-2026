@@ -1,6 +1,6 @@
 # Demand That Can't Vote: engineering documents
 
-These documents specify the London housing tool as a properly engineered product in this repo. They are reverse-engineered from the prototype Claude artifact "Demand That Can't Vote" (https://claude.ai/artifact/VkWcxQdq7L9TuoLHqQmsBK) and grounded in `demand_taxonomy.md` and `step_1.md`.
+These documents specify the London housing tool as a properly engineered product in this repo. They are reverse-engineered from the prototype Claude artifact "Demand That Can't Vote" (https://claude.ai/artifact/VkWcxQdq7L9TuoLHqQmsBK) and grounded in [`demand_taxonomy.md`](demand_taxonomy.md) and [`step_1_market_vs_voter.md`](step_1_market_vs_voter.md).
 
 | # | Document | Answers |
 |---|---|---|

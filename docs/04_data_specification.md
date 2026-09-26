@@ -138,4 +138,4 @@ Rules: FR-ADM-4. The version is auto-assigned at import time.
 | Full Forest MRP extract (24 seats estimated) | `V`, `vEst`, classification, findings | Pull `mrp_concern_housing_shortages` for all 75 London seats via Forest and import with `vEst:false` |
 | Original WhereToBuild CSV | `wtbGap` accuracy (48 imputed MSOAs), no tightness measure | Request from Warwick; rerun F15 |
 | Searchers per listing (tightness) | Market side | Add a field when the CSV arrives (corroborating only) |
-| Electoral registration, `movedIn`, PTAL, brownfield, Datahub pipeline | Not available in Forest | Keep as separate raw inputs to F15 (see `step_1.md`) |
+| Electoral registration, `movedIn`, PTAL, brownfield, Datahub pipeline | Not available in Forest | Keep as separate raw inputs to F15 (see `step_1_market_vs_voter.md`) |

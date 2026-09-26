@@ -1,4 +1,4 @@
-"""Indicator catalogue with side tags (step_1.md, docs/04 section 2)."""
+"""Indicator catalogue with side tags (docs/step_1_market_vs_voter.md, docs/04 section 2)."""
 
 SIDES = ("market", "voter", "voter_composition", "voter_weight", "exposure", "outcome", "identity")
 
