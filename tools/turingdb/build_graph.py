@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pandas as pd
 
-ZIP_PATH = Path(sys.argv[1] if len(sys.argv) > 1 else "/repo/Manuel Data/london_housing_by_dataset_csv.zip")
+ZIP_PATH = Path(sys.argv[1] if len(sys.argv) > 1 else "/repo/data-raw/manuel/london_housing_by_dataset_csv.zip")
 OUT_PATH = Path(sys.argv[2] if len(sys.argv) > 2 else "/turing/data/london_housing.jsonl")
 
 

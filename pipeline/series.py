@@ -1,7 +1,7 @@
 """Borough time series (series.json) and map geometry (geo.json) from the v2 prototype artifact.
 
 series.json is extracted verbatim from the artifact's `let SERIES = {...}` literal rather than rebuilt from
-"Manuel Data/london_housing_by_dataset_csv.zip": the artifact's metrics mix sources (e.g. the GLA CHAIN rough
+"data-raw/manuel/london_housing_by_dataset_csv.zip": the artifact's metrics mix sources (e.g. the GLA CHAIN rough
 sleeping quarter) that are not all in the zip, so extraction guarantees parity. core/src/trends.ts
 `parseSeriesCsv` ports the artifact's importer for adding further London Datastore long-format files.
 """

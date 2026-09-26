@@ -8,9 +8,9 @@ Mermaid diagrams of the system's inputs, computations and request flows. Names f
 flowchart LR
   subgraph RAW["Raw inputs"]
     direction TB
-    shivM["Shiv/london_msoa.csv"]
-    shivC["Shiv/london_constituency.csv"]
-    shivB["Shiv/london_borough.csv"]
+    shivM["data-raw/shiv/london_msoa.csv"]
+    shivC["data-raw/shiv/london_constituency.csv"]
+    shivB["data-raw/shiv/london_borough.csv"]
     pData["reference/prototype/data.json"]
     pBor["reference/prototype/boroughs.json"]
     pKb["reference/prototype/kb.json"]

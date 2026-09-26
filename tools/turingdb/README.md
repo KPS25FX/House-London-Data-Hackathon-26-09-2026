@@ -1,6 +1,6 @@
 # London housing graph in TuringDB
 
-Loads `Manuel Data/london_housing_by_dataset_csv.zip` (6 datasets, 59,659 rows) into a
+Loads `data-raw/manuel/london_housing_by_dataset_csv.zip` (6 datasets, 59,659 rows) into a
 TuringDB graph called `london_housing`.
 
 ## Graph model
@@ -22,7 +22,7 @@ TuringDB graph called `london_housing`.
   plus rough-sleeping pseudo-areas (Heathrow, Tube line, ...) whose code is `X:<name>`.
 - Non-numeric values would be kept in `raw_value` (none in the current data).
 - `Measure` nodes are the natural place to tag market-side vs voter-side indicators
-  (e.g. `SET m.side = 'market'`), see `../Plan.md`.
+  (e.g. `SET m.side = 'market'`), see `../../docs/step_1_market_vs_voter.md`.
 
 ## Running it (Windows)
 
@@ -31,10 +31,10 @@ official `turingdbai/turingdb` container named `turingdb` (ports 6666 API, 8080 
 data in the `turingdb_data` volume).
 
 ```powershell
-cd turingdb
+cd tools/turingdb
 docker build -t london-housing-tools .
 # 1. CSV zip -> JSONL in the server's data/ dir
-docker run --rm -v turingdb_data:/turing -v "${PWD}\..:/repo:ro" london-housing-tools `
+docker run --rm -v turingdb_data:/turing -v "${PWD}\..\..:/repo:ro" london-housing-tools `
   sh -c "python build_graph.py && chown 1000:1000 /turing/data/london_housing.jsonl"
 # 2. LOAD JSONL into the server (or load the existing on-disk graph)
 docker run --rm -e TURINGDB_HOST=http://host.docker.internal:6666 london-housing-tools python load_graph.py
