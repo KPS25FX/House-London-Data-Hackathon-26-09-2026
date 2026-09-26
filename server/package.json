@@ -1,0 +1,3 @@
+{ "name": "@dcv/server", "version": "0.1.0", "private": true, "type": "module",
+  "scripts": { "start": "tsx src/index.ts", "test": "vitest run" },
+  "dependencies": { "@dcv/core": "0.1.0", "@anthropic-ai/sdk": "^0.40.0" } }

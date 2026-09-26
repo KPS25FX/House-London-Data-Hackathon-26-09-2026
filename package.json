@@ -1,9 +1,21 @@
 {
   "name": "demand-that-cant-vote",
   "private": true,
+  "type": "module",
+  "workspaces": ["core", "web", "server"],
   "scripts": {
-    "build": "python3 app/build.py",
-    "test": "npm run build && node tests/e2e.test.js && node tests/memo.test.js"
+    "data": "python -m pipeline build",
+    "test": "npm -w core test && npm -w server test && python -m pytest pipeline/tests -q",
+    "dev": "npm -w web run dev",
+    "server": "npm -w server run start",
+    "e2e": "npx playwright test"
   },
-  "devDependencies": { "jspdf": "2.5.1", "playwright": "^1.47.0" }
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0",
+    "vite": "^5.4.0",
+    "tsx": "^4.19.0",
+    "@playwright/test": "^1.47.0",
+    "@types/node": "^22.0.0"
+  }
 }

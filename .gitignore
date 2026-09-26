@@ -1,0 +1,8 @@
+node_modules/
+dist/
+db/*.sqlite
+.env
+data/restricted/
+__pycache__/
+test-results/
+playwright-report/
