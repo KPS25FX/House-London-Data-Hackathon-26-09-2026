@@ -4,6 +4,7 @@ from pathlib import Path
 
 from . import BUILD_DATE, OUT_DATA, OUT_DB, OUT_REPORT
 from . import clean, db, export, indicators, ingest, model, policies, report
+from . import series as series_mod
 from .clean import nn
 
 BOROUGH_FIELDS = ["lad", "name", "hdt", "hdtCons", "netAdd6", "netAdd2425", "pldVsNet", "apprRate", "inTime", "approved",
@@ -101,7 +102,10 @@ def build(out_dir=None, db_path=None, report_path=None):
         "Sum of MSOA raw per seat equals seat raw exactly. MSOAs are assigned wholly to their Shiv pcon_code.",
         "MSOA built = Datahub completions FY2019/20-2024/25 / 6 (homes/yr).",
         "Seat 'boroughs' is kept as the prototype '; '-separated string.",
+        series_mod.NOTE_SERIES,
+        series_mod.NOTE_GEO,
     ]
+    series, geo = series_mod.build([s["code"] for s in seats], [b["name"] for b in boroughs])
     meta = {
         "version": f"{BUILD_DATE}.build-{input_hash()}",
         "generatedAt": f"{BUILD_DATE}T00:00:00Z",
@@ -110,7 +114,7 @@ def build(out_dir=None, db_path=None, report_path=None):
     }
 
     export.write(out_dir, seats=seats, boroughs=boroughs, msoa=msoa, policies=pols, postcodes=postcodes,
-                 indicators=inds, meta=meta)
+                 indicators=inds, meta=meta, series=series, geo=geo)
     db.write(db_path, seats, boroughs, msoa, inds, pols, postcodes, meta)
     res = report.compute(rows, shiv_seat)
     report.write(report_path, res, notes[:2])

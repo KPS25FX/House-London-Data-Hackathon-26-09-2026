@@ -4,6 +4,9 @@ import { FIX, HOLDERS, HYP_BLOCK, HYP_TITLES, RISK, TYPES } from '../content.js'
 import { hypotheses } from '../hypotheses.js';
 import { fmt, pc1 } from '../format.js';
 
+export const MISSING_GAP_MSOA_FALLBACK = "Missing homes are summed per neighbourhood; each seat's model potential is split across its neighbourhoods by transport and brownfield capacity because neighbourhood-level WhereToBuild demand was unavailable [K14].";
+export const MISSING_GAP_SEAT = 'Missing homes are computed per seat, so overbuilding neighbourhoods offset underbuilding ones [K14].';
+
 type PremiseKey = 'build' | 'demand' | 'concern' | 'delivery' | 'tenure' | 'pipeline' | 'vote' | 'margin' | 'land' | 'borough' | 'type';
 
 /** Which premises each hypothesis rests on. */
@@ -85,8 +88,8 @@ export function buildArgument(s: Seat, ctx: Ctx, H: Hypothesis[] = hypotheses(s,
   if (s.vEst) dataGaps.push('Resident concern is estimated from a regression on measured seats, not polled here.');
   const fellBack = ctx.settings.missingMode === 'msoa' && ctx.meta.missingMode === 'msoa_fallback';
   if (ctx.settings.missingMode === 'seat' || fellBack) dataGaps.push(fellBack
-    ? 'Missing homes use the seat-level fallback: neighbourhood data was unavailable, so overbuilding areas offset underbuilding ones [K14].'
-    : 'Missing homes are computed at seat level, so overbuilding neighbourhoods offset underbuilding ones [K14].');
+    ? MISSING_GAP_MSOA_FALLBACK
+    : MISSING_GAP_SEAT);
   dataGaps.push(`The missing-homes figure depends on the chosen London total (${fmt(ctx.settings.total)} a year) and the model in [K14].`);
   dataGaps.push('Completions are Planning London Datahub records, which miss some homes in a few boroughs [K10].');
   if (!ctx.boroughs[s.borough]) dataGaps.push(`No borough record for ${s.borough}.`);

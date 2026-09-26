@@ -17,9 +17,6 @@ export function h(strings: TemplateStringsArray, ...vals: unknown[]): Raw {
 export const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector(sel) as T | null;
 export const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => Array.from(root.querySelectorAll(sel)) as T[];
 export function set(el: Element | null, html: Raw) { if (el) el.innerHTML = html.html; }
-export function go(id: string, block: ScrollLogicalPosition = 'start') {
-  const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth', block });
-}
 
 export const fmt = (n: number | null | undefined) => (n == null || !isFinite(n) ? '—' : Math.round(n).toLocaleString('en-GB'));
 export const pc1 = (n: number | null | undefined) => (n == null ? '—' : (n * 100).toFixed(0) + '%');

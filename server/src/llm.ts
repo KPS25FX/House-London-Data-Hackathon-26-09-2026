@@ -2,8 +2,8 @@ import Anthropic from '@anthropic-ai/sdk';
 import type { Policy, PolicyArgument } from '@dcv/core';
 
 export const SYSTEM_PROMPT = 'You are a careful UK housing policy analyst. Use only supplied data.';
-export const MEMO_MAX_TOKENS = 2500;
-export const ASK_MAX_TOKENS = 600;
+export const MEMO_MAX_TOKENS = 8000;
+export const ASK_MAX_TOKENS = 2000;
 
 export type LlmErrorCode =
   | 'not_granted' | 'rate_limited' | 'session_expired' | 'prompt_too_large'

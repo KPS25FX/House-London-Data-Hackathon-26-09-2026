@@ -1,21 +1,22 @@
-/** F07 Settings: target, persuadability, missing-homes mode. Built once, then patched in place so the slider keeps its drag. */
+/** F07 Settings: London target (app bar), MP leverage weighting and missing-homes mode (Rankings). Patched in place so sliders keep their drag. */
 import { S, setSettings, subscribe } from '../state';
 import { $, fmt, h, set } from '../dom';
-import { TARGETS } from './steps';
+
+export const TARGETS: [number, string][] = [
+  [52287, 'London Plan 2021: 52,287'],
+  [55800, 'Draft London Plan: 55,800'],
+  [88000, 'Government need: ~88,000'],
+];
 
 export function mountSettings() {
   const root = $('#settings')!;
-  set(root, h`<details class="adjust"><summary>Adjust assumptions</summary><div class="controls">
-      <div class="ctl"><label for="wtot">London target (homes a year)</label><select id="wtot">${TARGETS.map(([v, l]) => h`<option value="${v}">${l}</option>`)}</select></div>
-      <div class="ctl"><label for="wclose">Persuadability: close seat / residents split</label><input type="range" id="wclose" min="0" max="100" value="50"><output for="wclose" id="wcloseo">50 / 50</output></div>
+  set(root, h`<details class="adjust"><summary>Adjust how MP leverage is scored</summary><div class="controls">
+      <div class="ctl"><label for="wclose">What makes an MP winnable: a close seat vs. residents split on housing</label><input type="range" id="wclose" min="0" max="100" value="50"><output for="wclose" id="wcloseo">50 / 50</output></div>
       <div class="ctl"><span id="mml">Missing homes</span><div class="seg" role="group" aria-labelledby="mml">
         <button type="button" data-mm="msoa" aria-pressed="true">per neighbourhood</button><button type="button" data-mm="seat" aria-pressed="false">per seat</button></div></div>
       </div>
       <p class="note">Total missing across London: <b data-testid="total-missing" id="totmiss"></b> homes a year.<span id="mmnote"></span></p></details>`);
-  root.addEventListener('change', e => {
-    const t = e.target as HTMLInputElement;
-    if (t.id === 'wtot') setSettings({ total: +t.value });
-  });
+  $('#wtot')!.addEventListener('change', e => setSettings({ total: +(e.target as HTMLSelectElement).value }));
   root.addEventListener('input', e => {
     const t = e.target as HTMLInputElement;
     if (t.id === 'wclose') setSettings({ wClose: +t.value / 100 });

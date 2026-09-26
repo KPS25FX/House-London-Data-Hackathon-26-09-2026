@@ -1,3 +1,6 @@
+import json
+import re
+from pathlib import Path
 """Policy library: prototype K01-K52 + Manuel's evaluation cards (E01-E07) and lessons (L01-L05)."""
 
 SRC = [{"name": "London Housing Policy Evidence Base (Manuel, 26 Sep 2026)", "url": "#evidence-base"}]
@@ -126,8 +129,32 @@ def _linked(pid, tags):
     return list(tags) + [t for t in DIAGNOSIS_LINKS.get(pid, []) if t not in tags]
 
 
+V2_ARTIFACT = Path(__file__).resolve().parent.parent / "reference" / "prototype_v2" / "artifact_v2.html"
+
+
+def v2_library(path=V2_ARTIFACT):
+    """Library entries the v2 artifact adds beyond the prototype kb (K60-K69 evidence cards,
+    cited by core/src/policyfit.ts). Parsed as JSON objects from the saved artifact; [] if absent."""
+    if not path.exists():
+        return []
+    s, dec, out = path.read_text(encoding="utf8"), json.JSONDecoder(), {}
+    for m in re.finditer(r'"id":\s*"(K\d\d)"', s):
+        k = m.group(1)
+        if k in out:
+            continue
+        try:
+            o, _ = dec.raw_decode(s, s.rfind("{", 0, m.start()))
+        except ValueError:
+            continue
+        if "title" in o and "text" in o:
+            out[k] = o
+    return [out[k] for k in sorted(out)]
+
+
 def build(kb):
     out = []
+    known = {k["id"] for k in kb}
+    kb = list(kb) + [k for k in v2_library() if k["id"] not in known]
     for k in kb:
         out.append({"id": k["id"], "title": k["title"], "tags": list(k.get("tags", [])), "text": k["text"],
                     "src": k.get("src", []),

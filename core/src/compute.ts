@@ -3,9 +3,12 @@ import { pctRank, tier } from './rank.js';
 import { areaType } from './classify.js';
 import { missingHomes } from './missing.js';
 import { bpkOf, closeness, dPOf, swingOf } from './leverage.js';
+import type { Series } from './trends.js';
+import { latest, metricById } from './trends.js';
 
 /** ALG-1..5. Pure: returns new seat objects; inputs are not mutated. */
-export function compute(rows: SeatRow[], msoa: Msoa[], settings: Settings): Seat[] {
+export function compute(rows: SeatRow[], msoa: Msoa[], settings: Settings, series?: Series): Seat[] {
+  const roughM = metricById(series, 'rough');
   const mP = pctRank(rows.map(r => r.wtbPer1k));
   const vP = pctRank(rows.map(r => r.V));
   const { bySeat } = missingHomes(rows, msoa, settings.total, settings.missingMode);
@@ -25,6 +28,7 @@ export function compute(rows: SeatRow[], msoa: Msoa[], settings: Settings): Seat
       bpd: (r.homes / Math.max(r.dwellings || 1, 1)) * 1000,
       swing, close, dP: dPOf(close, swing, settings.wClose),
       prioRaw: 0, prio: 0, rank: 0, bpk, bpkP: bP(bpk),
+      rough: latest(roughM, r.borough)?.v ?? null,
     };
   });
   const gmax = Math.max(...seats.map(s => s.gap));

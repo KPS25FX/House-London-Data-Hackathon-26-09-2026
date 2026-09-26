@@ -17,3 +17,7 @@ export * from './text.js';
 export * from './findings.js';
 export * from './citations.js';
 export * from './policy/argument.js';
+export * from './scenario.js';
+export * from './trends.js';
+export * from './policyfit.js';
+export * from './why.js';

@@ -46,6 +46,9 @@ export function boroughProfile(borough: string, policies: Policy[]): Policy | un
     policies.find(k => k.kind === 'borough_profile' && k.scope === borough);
 }
 
+/** Policy ids retrieve() always returns when present in the library. */
+export const ALWAYS_DOCS = ['K10', 'K14'] as const;
+
 export function retrieve(s: Seat, H: Hypothesis[], policies: Policy[]): Policy[] {
   const byId = new Map(policies.map(p => [p.id, p]));
   const ids = new Set<string>();
@@ -57,6 +60,8 @@ export function retrieve(s: Seat, H: Hypothesis[], policies: Policy[]): Policy[]
     const p = byId.get(x.id);
     if (ids.size < 11 && !(p && isProfile(p))) ids.add(x.id);
   });
-  ['K14', 'K05', 'K02'].forEach(k => { if (ids.size < 12) ids.add(k); });
+  // K10 and K14 are cited by the prompt rules and data gaps, so they are always included when they exist.
+  ALWAYS_DOCS.forEach(k => { if (byId.has(k)) ids.add(k); });
+  ['K05', 'K02'].forEach(k => { if (ids.size < 12) ids.add(k); });
   return [...ids].map(id => byId.get(id)).filter((p): p is Policy => !!p);
 }

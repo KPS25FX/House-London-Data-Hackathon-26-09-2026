@@ -32,6 +32,8 @@ export interface SeatRow {
 export interface Derived {
   Mp: number; Vp: number; Mt: Tier; Vt: Tier; type: AreaType; target: number; gap: number;
   bpd: number; swing: number; close: number; dP: number; prioRaw: number; prio: number; rank: number; bpk: number; bpkP: number;
+  /** v2: people seen rough sleeping last quarter in the seat's borough (series 'rough'); null when unknown or no series passed. */
+  rough?: number | null;
 }
 export type Seat = SeatRow & Derived;
 

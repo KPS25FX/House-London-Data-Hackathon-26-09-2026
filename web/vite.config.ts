@@ -8,6 +8,6 @@ export default defineConfig({
     proxy: { '/api': { target: 'http://localhost:8787', changeOrigin: true } },
     fs: { allow: ['..'] },
   },
-  preview: { port: 4173, proxy: { '/api': { target: 'http://localhost:8787', changeOrigin: true } } },
+  preview: { port: 4173, allowedHosts: ['.trycloudflare.com'], proxy: { '/api': { target: 'http://localhost:8787', changeOrigin: true } } },
   build: { outDir: 'dist', emptyOutDir: true, chunkSizeWarningLimit: 1200 },
 });

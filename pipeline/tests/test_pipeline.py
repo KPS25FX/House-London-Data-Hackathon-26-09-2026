@@ -6,7 +6,7 @@ import pytest
 from pipeline.build import build
 from pipeline.indicators import SIDES
 
-FILES = ["seats", "boroughs", "msoa", "policies", "postcodes", "indicators", "meta"]
+FILES = ["seats", "boroughs", "msoa", "policies", "postcodes", "indicators", "meta", "series", "geo"]
 
 
 @pytest.fixture(scope="module")
@@ -98,3 +98,26 @@ def test_deterministic(out):
     d1, d2, _, base = out
     for f in FILES:
         assert (d1 / f"{f}.json").read_bytes() == (d2 / f"{f}.json").read_bytes(), f
+
+
+def test_series(out):
+    _, _, d, _ = out
+    ms = d["series"]["metrics"]
+    names = {b["name"] for b in d["boroughs"]}
+    assert len(ms) >= 1
+    for m in ms:
+        for k in ["id", "label", "unit", "fmt", "source", "years", "data"]:
+            assert k in m, (m.get("id"), k)
+        assert m["data"] and set(m["data"]) <= names, m["id"]
+        for b, arr in m["data"].items():
+            assert len(arr) == len(m["years"]), (m["id"], b)
+    assert "�" not in json.dumps(ms)
+
+
+def test_geo(out):
+    _, _, d, _ = out
+    g = d["geo"]
+    codes = {s["code"] for s in d["seats"]}
+    assert g["w"] > 0 and g["h"] > 0
+    assert set(g["seats"]) == codes and len(g["seats"]) == 75
+    assert all(isinstance(p, str) and p.startswith("M") for p in g["seats"].values())

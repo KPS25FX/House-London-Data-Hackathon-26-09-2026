@@ -1,5 +1,7 @@
 /** F14 (lightweight): client-side "Load JSON update", validated per FR-ADM-4, applied in memory with a version bump. */
-import { S, applyRows } from '../state';
+import * as core from '@dcv/core';
+import { S, applyRows, notify, setSeries } from '../state';
+import { exportPolicies, importPolicies } from '../policytext';
 import { $, h, set } from '../dom';
 import type { SeatRow } from '../types';
 
@@ -35,10 +37,17 @@ export function nextVersion(now = new Date()): string {
 
 export function mountAdmin() {
   set($('#adminsec'), h`
-    <h2 id="adminh">Load a data update</h2>
-    <p class="note">A JSON array of objects, each with <code>code</code> (ONS constituency code) plus any fields to update, e.g. <code>[{"code":"E14001312","homes":412}]</code>. Changes apply to this browser session only; saving to the server comes later.</p>
-    <div class="admrow"><label class="btn" for="impfile">Choose JSON file</label><input type="file" id="impfile" class="sr" accept="application/json,.json"></div>
-    <div class="confirm" id="impconfirm" hidden><span id="impsummary"></span><button type="button" class="btn primary" id="impyes">Import</button><button type="button" class="btn" id="impno">Cancel</button></div>
+    <div class="labhead"><div><div class="eyebrow">This browser session</div><h2 id="adminh">Data updates</h2></div><span class="note">Changes apply to this browser session only; reload to return to the published snapshot.</span></div>
+    <div class="admrow">
+      <div class="admbox"><h3>Import seat data</h3><p class="note">A JSON array of objects, each with <code>code</code> (ONS constituency code) plus any fields to update, e.g. <code>[{"code":"E14001312","homes":412}]</code>.</p>
+        <label class="filebtn" for="impfile">Choose JSON file</label><input type="file" id="impfile" class="sr" accept="application/json,.json">
+        <div class="confirm" id="impconfirm" hidden><span id="impsummary"></span><button type="button" class="primary" id="impyes">Import</button><button type="button" id="impno">Cancel</button></div></div>
+      <div class="admbox"><h3>Import time series</h3><p class="note">A CSV in the London Datastore long format: <code>dataset, area_code, area_name, area_type, period, year, measure, breakdown, value, unit, source</code>. Each measure and breakdown becomes a trend you can chart and map. Borough rows and the London row are used.</p>
+        <label class="filebtn" for="serfile">Choose CSV file</label><input type="file" id="serfile" class="sr" accept=".csv,text/csv">
+        <div class="confirm" id="serconfirm" hidden><span id="sersummary"></span><button type="button" class="primary" id="seryes">Import</button><button type="button" id="serno">Cancel</button></div></div>
+      <div class="admbox"><h3>Policy evidence</h3><p class="note">Edit the wording behind the Evidence page: evidence strength, what past policy shows, guardrails, who acts. Download the current set, edit the JSON, and import it. Fit and risk ratings stay calculated from the data.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" id="poldl">Download JSON</button><label class="filebtn" for="polfile">Import JSON</label></div><input type="file" id="polfile" class="sr" accept="application/json,.json"></div>
+    </div>
     <p class="note" id="adminmsg" role="status" aria-live="polite"></p>`);
   let pending: { items: Record<string, unknown>[]; version: string } | null = null;
   const msg = (t: string) => { $('#adminmsg')!.textContent = t; };
@@ -61,5 +70,34 @@ export function mountAdmin() {
     applyRows(rows, pending.version);
     msg(`Imported ${pending.items.length} seats. Data version ${pending.version}.`);
     pending = null; $('#impconfirm')!.hidden = true; ($('#impfile') as HTMLInputElement).value = '';
+  });
+  let pendingSeries: ReturnType<typeof core.parseSeriesCsv> | null = null;
+  $('#serfile')!.addEventListener('change', async e => {
+    const inp = e.target as HTMLInputElement, f = inp.files?.[0]; if (!f) return;
+    try {
+      pendingSeries = core.parseSeriesCsv(await f.text());
+      $('#sersummary')!.textContent = `${pendingSeries.metrics.length} measure(s): ${pendingSeries.metrics.map(m => m.label).slice(0, 4).join(', ')}${pendingSeries.metrics.length > 4 ? '…' : ''}. This replaces the trends.`;
+      $('#serconfirm')!.hidden = false; msg('');
+    } catch (err) { pendingSeries = null; $('#serconfirm')!.hidden = true; msg(`Import rejected: ${(err as Error).message}`); }
+  });
+  $('#serno')!.addEventListener('click', () => { pendingSeries = null; $('#serconfirm')!.hidden = true; ($('#serfile') as HTMLInputElement).value = ''; });
+  $('#seryes')!.addEventListener('click', () => {
+    if (!pendingSeries) return;
+    const n = pendingSeries.metrics.length, version = nextVersion();
+    setSeries(pendingSeries, version);
+    msg(`Imported ${n} time series. Data version ${version}.`);
+    pendingSeries = null; $('#serconfirm')!.hidden = true; ($('#serfile') as HTMLInputElement).value = '';
+  });
+  $('#poldl')!.addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(exportPolicies(), null, 2)], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'policy-evidence.json';
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    msg('Saved policy-evidence.json.');
+  });
+  $('#polfile')!.addEventListener('change', async e => {
+    const inp = e.target as HTMLInputElement, f = inp.files?.[0]; inp.value = ''; if (!f) return;
+    let arr: unknown; try { arr = JSON.parse(await f.text()); } catch { msg("That file isn't valid JSON."); return; }
+    try { const n = importPolicies(arr); msg(`Updated wording for ${n} policies.`); notify('policy'); }
+    catch (err) { msg((err as Error).message); }
   });
 }

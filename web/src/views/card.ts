@@ -1,6 +1,6 @@
 /** F02 "Your area" panel + F04 seat card. */
 import * as core from '@dcv/core';
-import { S, selected, subscribe } from '../state';
+import { S, select, selected, setFilter, subscribe } from '../state';
 import { $, fmt, h, ordinal, pc1, set } from '../dom';
 import { fixFor, typeInfo } from '../content';
 import { consumeMsg, lookup, onPostcode } from './postcode';
@@ -14,11 +14,11 @@ export const marginText = (r: Seat) => (r.majority != null && r.majority < 1000 
 
 export function mountCard() {
   set($('#areasec'), h`
-    <h2 id="pch">Your area</h2><p class="note">Enter a postcode, or select a seat on the map or in the rankings.</p>
+    <h2 id="pch">Choose a seat</h2><div class="pick" id="pick"></div><p class="note" style="margin:8px 0 0">Or enter a postcode:</p>
     <form class="pc" id="pcform" autocomplete="off">
       <label for="pcin" class="sr">Postcode</label>
       <input id="pcin" name="pc" placeholder="Postcode, e.g. SE15 5DQ" inputmode="text" autocapitalize="characters">
-      <button type="submit">Go</button>
+      <button type="submit">Look up</button>
     </form>
     <div class="pcmsg" id="pcmsg" role="status" aria-live="polite"></div>
     <div class="card" id="card" aria-live="polite"></div>`);
@@ -26,12 +26,29 @@ export function mountCard() {
     e.preventDefault();
     lookup(($('#pcin') as HTMLInputElement).value);
   });
+  $('#pick')!.addEventListener('change', e => {
+    const t = e.target as HTMLSelectElement;
+    if (t.id === 'sbor2') {
+      setFilter({ fborough: t.value });
+      const top = t.value ? S.seats.filter(r => r.borough === t.value).sort((a, b) => b.gap - a.gap)[0] : undefined;
+      if (top && selected()?.borough !== t.value) select(top.code);
+    }
+    if (t.id === 'sseat2' && t.value) select(t.value);
+  });
   onPostcode((v, msg) => { ($('#pcin') as HTMLInputElement).value = v; $('#pcmsg')!.textContent = msg; });
   subscribe((_, why) => {
     if (why === 'select') $('#pcmsg')!.textContent = consumeMsg(selected()?.name);
-    if (why !== 'llm' && why !== 'layer') render();
+    if (why !== 'llm' && why !== 'layer' && why !== 'trend' && why !== 'policy') { render(); renderPick(); }
   });
-  render();
+  render(); renderPick();
+}
+
+function renderPick() {
+  const boroughs = [...new Set(S.seats.map(x => x.borough))].sort();
+  const scope = (S.fborough ? S.seats.filter(x => x.borough === S.fborough) : S.seats).slice().sort((a, b) => a.name.localeCompare(b.name));
+  const has = scope.some(x => x.code === S.sel);
+  set($('#pick'), h`<div class="ctl"><label for="sbor2">Council</label><select id="sbor2"><option value="">All of London</option>${boroughs.map(b => h`<option${b === S.fborough ? ' selected' : ''}>${b}</option>`)}</select></div>
+    <div class="ctl"><label for="sseat2">Seat</label><select id="sseat2">${has ? '' : h`<option value="" selected>Select a seat…</option>`}${scope.map(x => h`<option value="${x.code}"${x.code === S.sel ? ' selected' : ''}>${x.name}</option>`)}</select></div>`);
 }
 
 function render() {
