@@ -1,8 +1,31 @@
+# Node
 node_modules/
 dist/
-db/*.sqlite
-.env
-data/restricted/
-__pycache__/
 test-results/
 playwright-report/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Build outputs
+db/
+*.sqlite
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Event-use-only inputs (WhereToBuild raw MSOA data etc.). Never commit.
+data/restricted/
+data-raw/restricted/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
